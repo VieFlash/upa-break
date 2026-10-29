@@ -5,6 +5,7 @@ import '../../models/settings.dart';
 import '../../state/app_state.dart';
 import '../theme.dart';
 import '../widgets/mascot.dart';
+import '../widgets/permission_banner.dart';
 import 'break_screen.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -94,6 +95,10 @@ class HomeScreen extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: t.titleLarge?.copyWith(fontWeight: FontWeight.w700)),
             const SizedBox(height: 20),
+            if (s.notificationsBlocked) ...[
+              const PermissionBanner(),
+              const SizedBox(height: 12),
+            ],
             Card(
               child: Padding(
                 padding: const EdgeInsets.all(16),

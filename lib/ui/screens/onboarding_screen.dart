@@ -4,6 +4,7 @@ import '../../models/settings.dart';
 import '../../state/app_state.dart';
 import '../widgets/mascot.dart';
 import '../widgets/schedule_form.dart';
+import '../widgets/upa_rig.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -18,7 +19,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   late UserSettings _s = AppScope.read(context).settings;
   bool _saving = false;
 
-  static const _pages = 3;
+  static const _pages = 4;
 
   void _next() {
     if (_index < _pages - 1) {
@@ -81,6 +82,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   _welcome(context),
                   _schedule(context),
                   _style(context),
+                  _permission(context),
                 ],
               ),
             ),
@@ -98,7 +100,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   Expanded(
                     child: FilledButton(
                       onPressed: _saving ? null : _next,
-                      child: Text(_index == _pages - 1 ? 'Bắt đầu cùng Upa' : 'Tiếp tục'),
+                      child: Text(_index == _pages - 1 ? 'Cho phép Upa nhắc' : 'Tiếp tục'),
                     ),
                   ),
                 ],
@@ -128,6 +130,37 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             'Lỡ một lần cũng không sao, Upa không bao giờ trách.',
             textAlign: TextAlign.center,
             style: t.bodyLarge,
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Giải thích trước, rồi mới hiện hộp thoại xin quyền của hệ điều hành (khi bấm nút cuối).
+  Widget _permission(BuildContext context) {
+    final t = Theme.of(context).textTheme;
+    return Padding(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const UpaRig(state: 'bell', size: 240),
+          const SizedBox(height: 24),
+          Text('Cho Upa nhắc bạn nhé?',
+              textAlign: TextAlign.center,
+              style: t.headlineSmall?.copyWith(fontWeight: FontWeight.w800)),
+          const SizedBox(height: 12),
+          Text(
+            'Upa chỉ lắc chuông trong giờ làm, khi bạn đã ngồi lâu - không spam, không quảng cáo.\n'
+            'Bước tiếp theo điện thoại sẽ hỏi quyền gửi thông báo.',
+            textAlign: TextAlign.center,
+            style: t.bodyLarge,
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Không cho phép cũng không sao, bạn vẫn dùng app và bật lại sau trong Cài đặt.',
+            textAlign: TextAlign.center,
+            style: t.bodySmall?.copyWith(color: Colors.brown.shade400),
           ),
         ],
       ),

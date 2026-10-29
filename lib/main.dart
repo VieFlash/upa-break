@@ -16,6 +16,7 @@ Future<void> main() async {
 
   runApp(UpaBreakApp(state: state));
 
+  await state.refreshPermission();
   await state.reschedule();
   if (await notifications.launchedFromNotification()) {
     WidgetsBinding.instance.addPostFrameCallback((_) => openBreakFromNotification(state));

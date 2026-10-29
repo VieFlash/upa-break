@@ -14,6 +14,7 @@ import 'mascot_rig.g.dart';
 /// - sleepy:  thở, gật gù, bong bóng mũi phồng/xẹp, chữ z bay lên.
 /// - stretch: nhún nhảy, tay chữ V lắc lắc, bảng HAPPY đung đưa, sao lấp lánh.
 /// - proud:   gật đầu tự hào + nhún, sao lấp lánh.
+/// - bell:    (onboarding xin quyền) lắc chuông leng keng từng đợt, vạch "ding" chớp theo, chớp mắt.
 class UpaRig extends StatefulWidget {
   const UpaRig({super.key, required this.state, this.size = 220});
 
@@ -133,6 +134,16 @@ class _UpaRigState extends State<UpaRig> with SingleTickerProviderStateMixin {
           'sign' => (m: _about(s.rightShoulder, angle: -3.5 * _deg * (.5 + .5 * _sin(t, 1.6, math.pi))), opacity: 1),
           _ => _fx(layer, t, id),
         };
+      case 'bell':
+        final b = _wave(t, 2.2);
+        final head = _about(s.neck, angle: 2 * _deg * _sin(t, 2.4), shift: Offset(0, 2 * (1 - b)));
+        return switch (layer) {
+          'body' => (m: _about(ground, sx: 1 + .01 * b, sy: 1 + .02 * b), opacity: 1),
+          'head' => (m: head, opacity: 1),
+          'eyes' => (m: head * _about(s.eyes, sy: _blink(t)), opacity: 1),
+          'bell' => (m: _about(s.leftShoulder, angle: 9 * _deg * _ring(t) * _sin(t, .3)), opacity: 1),
+          _ => _fx(layer, t, id),
+        };
       case 'proud':
         final nod = math.pow(math.sin(math.pi * t / 1.2), 2).toDouble(); // gật đầu "hehe"
         final head = _about(s.neck, angle: 2 * _deg * _sin(t, 2.4), shift: Offset(0, 3 * nod));
@@ -157,7 +168,13 @@ class _UpaRigState extends State<UpaRig> with SingleTickerProviderStateMixin {
     return math.min(one(0), doubleBlink ? one(.25) : 1);
   }
 
-  /// Hiệu ứng: bong bóng nổi lên, sao lấp lánh, mồ hôi chảy xuống.
+  /// Độ mạnh của đợt lắc chuông: lắc 1.2 giây rồi nghỉ 1.2 giây (0 = đứng yên).
+  static double _ring(double t) {
+    final q = (t % 2.4) / 1.2;
+    return q < 1 ? math.sin(math.pi * q) : 0;
+  }
+
+  /// Hiệu ứng: bong bóng nổi lên, sao lấp lánh, mồ hôi chảy xuống, vạch "ding" của chuông.
   ({Matrix4 m, double opacity}) _fx(String layer, double t, Matrix4 id) {
     if (layer == 'shadow' || !layer.startsWith('fx')) return (m: id, opacity: 1);
     final i = int.parse(layer.substring(2));
@@ -172,6 +189,10 @@ class _UpaRigState extends State<UpaRig> with SingleTickerProviderStateMixin {
       case 'star':
         final tw = .5 + .5 * _sin(t, 1.3, i * 2.1);
         return (m: _about(fx.at, angle: 20 * _deg * (tw - .5), sx: .55 + .45 * tw, sy: .55 + .45 * tw), opacity: .55 + .45 * tw);
+      case 'ding':
+        final r = _ring(t);
+        final pulse = .5 + .5 * _sin(t, .3, i * math.pi).abs();
+        return (m: _about(fx.at, sx: .7 + .3 * r, sy: .7 + .3 * r), opacity: (r * pulse).clamp(0.0, 1.0));
       case 'sweat':
         final p = (t / 2.4) % 1;
         return (m: _about(fx.at, sx: 1 - .1 * p, sy: 1 + .15 * p, shift: Offset(0, 12 * p * p)), opacity: _fade(p, inEnd: .1, outStart: .65));

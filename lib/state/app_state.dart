@@ -24,6 +24,7 @@ class AppState extends ChangeNotifier {
   DateTime? _pausedUntil;
   int _fish;
   DateTime? _nextReminder;
+  bool? _notificationsAllowed;
 
   /// Cho phép test "giả" thời gian.
   DateTime Function() clock = DateTime.now;
@@ -32,6 +33,9 @@ class AppState extends ChangeNotifier {
   List<BreakLog> get logs => List.unmodifiable(_logs);
   int get fish => _fish;
   DateTime? get nextReminder => _nextReminder;
+
+  /// Đã biết chắc là người dùng tắt/từ chối thông báo (null = chưa kiểm tra được).
+  bool get notificationsBlocked => _notificationsAllowed == false;
   DateTime get now => clock();
 
   // ---------- Số liệu ----------
@@ -113,7 +117,29 @@ class AppState extends ChangeNotifier {
 
   Future<void> completeOnboarding(UserSettings s) async {
     await notifications.requestPermission();
+    await refreshPermission();
     await updateSettings(s.copyWith(onboarded: true));
+  }
+
+  /// Đọc lại trạng thái quyền thông báo (gọi khi mở app / quay lại từ Cài đặt hệ thống).
+  Future<void> refreshPermission() async {
+    try {
+      final allowed = await notifications.permissionGranted();
+      if (allowed == _notificationsAllowed) return;
+      _notificationsAllowed = allowed;
+      notifyListeners();
+    } catch (e) {
+      debugPrint('Không đọc được quyền thông báo: $e');
+    }
+  }
+
+  /// Xin lại quyền; trả về true nếu giờ đã được phép. Hệ điều hành có thể không hiện hộp thoại nữa
+  /// (iOS sau lần từ chối đầu, Android sau 2 lần) - khi đó UI mở Cài đặt hệ thống.
+  Future<bool> askPermissionAgain() async {
+    await notifications.requestPermission();
+    await refreshPermission();
+    if (!notificationsBlocked) await reschedule();
+    return !notificationsBlocked;
   }
 
   Future<void> updateSettings(UserSettings s) async {
@@ -182,6 +208,7 @@ class AppState extends ChangeNotifier {
   void tick() => notifyListeners();
 
   Future<void> refresh() async {
+    await refreshPermission();
     await reschedule();
     notifyListeners();
   }

@@ -59,7 +59,7 @@ tool/setup_android.dart
 - Thêm nút "Nhắc thử sau 1 phút" (lên lịch 1 thông báo sau 60 giây).
 - **Xong khi:** thông báo hiện khi app bị kill, chạm vào mở đúng màn giãn cơ; sau khi reboot máy lịch vẫn còn.
 
-### [ ] T1.3 Quyền thông báo & tối ưu pin
+### [x] T1.3 Quyền thông báo & tối ưu pin
 - Onboarding bước cuối: màn giải thích trước khi xin quyền (Upa cầm chuông), sau đó mới gọi `requestPermission()`.
 - Nếu người dùng từ chối: banner trên màn Hôm nay "Upa chưa được phép nhắc bạn" + nút mở cài đặt app.
 - Android: nút mở màn tối ưu pin (dùng `android_intent_plus` hoặc tương đương) + hướng dẫn theo hãng

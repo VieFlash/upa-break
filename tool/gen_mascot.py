@@ -17,7 +17,7 @@ C = dict(
     mouth="#8A2A3E", tongue="#FF7A96",
     eye_top="#2B1420", eye_bot="#6E3A52",
     blue="#4F86FF", blue_dark="#2E5FD6",
-    spark="#FFD23F", z="#8C9EE0", sweat="#8FD3FF", bubble="#C9F0FF",
+    spark="#FFD23F", bell="#FFD23F", bell_shade="#E5A91C", bell_light="#FFF1A8", z="#8C9EE0", sweat="#8FD3FF", bubble="#C9F0FF",
 )
 OW = 6
 
@@ -232,6 +232,8 @@ def body(svg, arms):
         s += nub(svg, 96, 212, -20) + nub(svg, 160, 212, 20)
     elif arms == "droop":
         s += nub(svg, 90, 222, -42) + nub(svg, 166, 222, 42)
+    elif arms == "bell":  # the other arm is drawn by bell()
+        s += nub(svg, 160, 212, 20)
     for x in (102, 154):
         s += svg.shaded(f"M{x - 20} 240 Q{x - 20} 229 {x} 229 Q{x + 20} 229 {x + 20} 240 Q{x} 250 {x - 20} 240 Z",
                         C["skin"], C["shade"], off=(-3, -3), ow=5)
@@ -253,6 +255,40 @@ def arm(svg, x1, y1, x2, y2):
             + svg.shaded(f"M{x2 - 13} {y2} A13 13 0 1 1 {x2 + 13} {y2} A13 13 0 1 1 {x2 - 13} {y2} Z",
                          C["skin"], C["shade"], off=(-3, -4), ow=5.5,
                          hl=[(x2 - 4, y2 - 6, 4, 2.5, -30, C["light"], .9)]))
+
+
+BELL_PAW = (68, 180)
+
+
+def bell(svg, paw=BELL_PAW, sc=1.25):
+    """Handbell held up by its handle in a short arm (Upa asking to send reminders).
+    Drawn on the viewer's left where there is no tail, so the bell and its 'ding' read clearly."""
+    px, py = paw
+    ox, oy = px, py + 9  # top of the dome; the handle runs up into the paw
+    dome = (f"M{f(ox - 5 * sc)} {f(oy + 2 * sc)} C{f(ox - 12 * sc)} {f(oy + 3 * sc)} {f(ox - 14 * sc)} {f(oy + 10 * sc)} "
+            f"{f(ox - 14 * sc)} {f(oy + 18 * sc)} C{f(ox - 14 * sc)} {f(oy + 24 * sc)} {f(ox - 17 * sc)} {f(oy + 27 * sc)} "
+            f"{f(ox - 19 * sc)} {f(oy + 30 * sc)} L{f(ox + 19 * sc)} {f(oy + 30 * sc)} "
+            f"C{f(ox + 17 * sc)} {f(oy + 27 * sc)} {f(ox + 14 * sc)} {f(oy + 24 * sc)} {f(ox + 14 * sc)} {f(oy + 18 * sc)} "
+            f"C{f(ox + 14 * sc)} {f(oy + 10 * sc)} {f(ox + 12 * sc)} {f(oy + 3 * sc)} {f(ox + 5 * sc)} {f(oy + 2 * sc)} Z")
+    s = svg.shaded(circle_d(ox, oy + 33 * sc, 4.5 * sc), C["bell_shade"], C["bell_shade"], off=(0, 0), ow=3.5)  # clapper
+    s += svg.shaded(dome, C["bell"], C["bell_shade"], off=(-3, -3), ow=4.5,
+                    hl=[(ox - 7 * sc, oy + 13 * sc, 2.5 * sc, 7 * sc, 12, C["bell_light"], .95)])
+    s += svg.shaded(circle_d(ox, oy + 30 * sc, 20 * sc, 4.5 * sc), C["bell"], C["bell_shade"], off=(-2, -1.5), ow=4.5)  # lip
+    s += svg.shaded(circle_d(ox, oy + 1, 4.5), C["bell_shade"], C["bell_shade"], off=(0, 0), ow=3)  # top knob
+    return s + arm(svg, 96, 198, px, py)
+
+
+def ding(x, y, sc=1.0, toward=-90):
+    """'Ding!' marks: three short strokes fanning out from (x, y) around direction [toward] (degrees)."""
+    s = ""
+    for ang in (-40, 0, 40):
+        r = math.radians(toward + ang)
+        x1, y1 = x + math.cos(r) * 6 * sc, y + math.sin(r) * 6 * sc
+        x2, y2 = x + math.cos(r) * 14 * sc, y + math.sin(r) * 14 * sc
+        d = f"M{f(x1)} {f(y1)} L{f(x2)} {f(y2)}"
+        s += (f'<path d="{d}" stroke="{C["line"]}" stroke-width="{f(6 * sc)}" stroke-linecap="round"/>'
+              f'<path d="{d}" stroke="{C["spark"]}" stroke-width="{f(2.6 * sc)}" stroke-linecap="round"/>')
+    return s
 
 
 def circle_d(x, y, rx, ry=None):
@@ -351,7 +387,7 @@ def shadow():
 
 
 # effects: (kind, *args); kept as data so the rig can export each one as its own animated layer
-FX = dict(bub=bub, star=star, sweat=lambda: sweat(), zzz=lambda: zzz())
+FX = dict(bub=bub, star=star, ding=ding, sweat=lambda: sweat(), zzz=lambda: zzz())
 SWEAT_AT = (214, 79)
 
 STATES = {
@@ -360,6 +396,7 @@ STATES = {
     "mascot_sleepy": ("translate(12 18) rotate(-11 128 190)", "closed", "smile", "droop", [("zzz",)]),
     "mascot_stretch": ("translate(0 4)", "happy", "open", "sign",
                        [("star", 22, 34, .8), ("star", 28, 210, .55), ("bub", 40, 188, 4.5)]),
+    "mascot_bell": ("", "open", "smile", "bell", [("ding", 40, 206, .9, -150), ("ding", 98, 214, .7, -30)]),
     "mascot_proud": ("", "happy", "open", "rest",
                      [("star", 26, 34, 1.0), ("star", 232, 30, .9), ("star", 14, 186, .6), ("star", 240, 190, .7)]),
 }
@@ -385,6 +422,8 @@ def parts(name):
     if arms == "sign":
         P["vhand"] = lambda svg: v_sign(svg)
         P["sign"] = lambda svg: sign(svg)
+    if arms == "bell":
+        P["bell"] = lambda svg: bell(svg)
     for i, (kind, *a) in enumerate(fx):
         P[f"fx{i}" if kind != "zzz" else "zzz"] = (lambda k, a: lambda svg: FX[k](*a))(kind, a)
     return P

@@ -35,7 +35,10 @@ fvm flutter run
 - Màn debug ẩn: **nhấn giữ tiêu đề "Cài đặt" 3 giây** → xem quyền thông báo, các mốc nhắc theo kế hoạch,
   thông báo đang chờ trong hệ thống, và nút **Nhắc thử sau 1 phút** (tắt app để thử lịch hẹn thật).
 - Muốn thấy lời nhắc thật nhanh: chọn kiểu **Chăm chỉ** và đặt giờ vào làm sớm hơn giờ hiện tại khoảng 50 phút.
-- Máy Xiaomi/Oppo/Vivo: bật "Pin: Không giới hạn" và "Tự khởi động" cho app, nếu không lời nhắc có thể bị chặn.
+- Máy Xiaomi/Oppo/Vivo/Samsung: Cài đặt → **Nhắc đúng giờ** hiện hướng dẫn theo đúng hãng máy + nút mở màn tối ưu pin
+  và cài đặt ứng dụng (bật "Không hạn chế" pin, "Tự khởi động"), nếu không lời nhắc có thể bị chặn.
+- Từ chối quyền thông báo vẫn dùng app bình thường; màn Hôm nay có banner **Bật thông báo**
+  (xin lại quyền, hoặc mở Cài đặt hệ thống nếu máy không hỏi nữa).
 
 ## Cấu trúc
 
@@ -48,11 +51,13 @@ lib/
   data/storage.dart             Lưu local bằng shared_preferences
   logic/reminder_planner.dart   Tính các mốc nhắc (hàm thuần, có test)
   logic/streak.dart             Streak + khiên streak (hàm thuần, có test)
+  logic/battery_guide.dart      Nhận diện hãng máy + hướng dẫn tắt tối ưu pin (hàm thuần, có test)
   services/notification_service.dart  Lên lịch local notification
+  services/system_settings.dart       Mở cài đặt thông báo / tối ưu pin / ứng dụng (Android + iOS)
   state/app_state.dart          ChangeNotifier: trạng thái Upa, số liệu, hành động
   ui/screens/                   Onboarding, Hôm nay, Bài tập, Nhật ký, Cài đặt, Phiên tập
   ui/widgets/                   Mascot + UpaRig (chuyển động theo trạng thái), form giờ làm
-assets/mascot/                  SVG Upa: mascot_{fresh,slouch,sleepy,stretch,proud}, app_icon
+assets/mascot/                  SVG Upa: mascot_{fresh,slouch,sleepy,stretch,proud,bell}, app_icon
 assets/mascot/rig/              Các lớp SVG cho chuyển động (sinh từ tool/gen_mascot.py)
 assets/upa_assets/              Bản gốc SVG/PNG + icon 1024 (nguồn cho tool/gen_icons.py)
 tool/                           setup_android/ios, gen_icons, gen_mascot, render_mascot

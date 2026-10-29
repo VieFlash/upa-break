@@ -3,8 +3,11 @@ import 'dart:io' show Platform;
 
 import 'package:flutter/material.dart';
 
+import '../../logic/battery_guide.dart';
 import '../../models/settings.dart';
+import '../../services/system_settings.dart';
 import '../../state/app_state.dart';
+import '../widgets/permission_banner.dart';
 import '../widgets/schedule_form.dart';
 import 'debug_screen.dart';
 
@@ -71,6 +74,21 @@ class SettingsScreen extends StatelessWidget {
           const SectionTitle('Thông báo'),
           Card(
             child: ListTile(
+              leading: Icon(
+                state.notificationsBlocked ? Icons.notifications_off_outlined : Icons.notifications_outlined,
+              ),
+              title: Text(state.notificationsBlocked ? 'Thông báo đang tắt' : 'Thông báo đang bật'),
+              subtitle: Text(state.notificationsBlocked
+                  ? 'Upa không nhắc được cho tới khi bạn bật lại'
+                  : 'Upa sẽ nhắc trong giờ làm'),
+              trailing: state.notificationsBlocked
+                  ? TextButton(onPressed: () => PermissionBanner.enable(state), child: const Text('Bật'))
+                  : null,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Card(
+            child: ListTile(
               leading: const Icon(Icons.notifications_active_outlined),
               title: const Text('Gửi thông báo thử'),
               subtitle: const Text('Kiểm tra xem điện thoại có hiện lời nhắc không'),
@@ -81,17 +99,8 @@ class SettingsScreen extends StatelessWidget {
             ),
           ),
           if (Platform.isAndroid) ...[
-            const SizedBox(height: 8),
-            const Card(
-              child: Padding(
-                padding: EdgeInsets.all(16),
-                child: Text(
-                  'Không nhận được lời nhắc? Trên Xiaomi, Oppo, Vivo, Samsung… hãy vào '
-                  'Cài đặt > Ứng dụng > Upa Break > Pin, chọn "Không giới hạn" '
-                  'và bật "Tự khởi động" để Upa nhắc đúng giờ.',
-                ),
-              ),
-            ),
+            const SectionTitle('Nhắc đúng giờ'),
+            const _BatteryGuideCard(),
           ],
           const SizedBox(height: 24),
           Text(
@@ -139,4 +148,56 @@ class _HoldToOpenState extends State<_HoldToOpen> {
         onPointerCancel: _cancel,
         child: widget.child,
       );
+}
+
+/// Hướng dẫn tắt tối ưu pin theo hãng máy (Android) + lối tắt tới màn cài đặt tương ứng.
+class _BatteryGuideCard extends StatelessWidget {
+  const _BatteryGuideCard();
+
+  @override
+  Widget build(BuildContext context) {
+    final t = Theme.of(context).textTheme;
+    return FutureBuilder<OemBrand>(
+      future: SystemSettings.oemBrand(),
+      builder: (context, snap) {
+        final brand = snap.data ?? OemBrand.other;
+        final steps = batteryGuideSteps(brand);
+        return Card(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16, 14, 16, 8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Không nhận được lời nhắc? Máy có thể đang chặn Upa chạy nền.'),
+                const SizedBox(height: 8),
+                Text('Trên ${oemBrandName(brand)}:', style: t.titleSmall?.copyWith(fontWeight: FontWeight.w700)),
+                const SizedBox(height: 4),
+                for (var i = 0; i < steps.length; i++)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 2),
+                    child: Text('${i + 1}. ${steps[i]}'),
+                  ),
+                const SizedBox(height: 8),
+                Wrap(
+                  spacing: 8,
+                  children: [
+                    OutlinedButton.icon(
+                      onPressed: SystemSettings.openBatteryOptimization,
+                      icon: const Icon(Icons.battery_saver_outlined),
+                      label: const Text('Tắt tối ưu pin'),
+                    ),
+                    OutlinedButton.icon(
+                      onPressed: SystemSettings.openAppSettings,
+                      icon: const Icon(Icons.app_settings_alt_outlined),
+                      label: const Text('Cài đặt ứng dụng'),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 }

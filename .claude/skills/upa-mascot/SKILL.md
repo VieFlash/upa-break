@@ -18,7 +18,7 @@ không dùng ảnh tải từ mạng, không dùng ảnh AI. Thêm hình mới =
    Chi tiết nhỏ: `python3 tool/render_mascot.py --zoom <tên_file_không_đuôi>`.
 5. Đối chiếu checklist mục 6. Sai thì sửa và lặp lại bước 3–5 (thường cần 2–3 vòng).
 6. Khi ổn: `python3 tool/render_mascot.py --export` nếu cần PNG (icon launcher, ảnh thông báo, store).
-7. Không đổi tên file đang được code dùng (`mascot_fresh|slouch|sleepy|stretch|proud.svg`,
+7. Không đổi tên file đang được code dùng (`mascot_fresh|slouch|sleepy|stretch|proud|bell.svg`,
    `app_icon.svg`, `app_icon_foreground.svg`) trừ khi cập nhật luôn `lib/ui/widgets/mascot.dart`.
 
 ## 2. Khung hình
