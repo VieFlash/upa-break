@@ -261,21 +261,28 @@ BELL_PAW = (68, 180)
 
 
 def bell(svg, paw=BELL_PAW, sc=1.25):
-    """Handbell held up by its handle in a short arm (Upa asking to send reminders).
-    Drawn on the viewer's left where there is no tail, so the bell and its 'ding' read clearly."""
+    """Bell hanging on a short cord from a short arm (Upa asking to send reminders).
+    The bell is drawn IN FRONT of the arm; the cord runs up into the paw, with a little thumb over it
+    so the paw reads as gripping. Drawn on the viewer's left where there is no tail."""
     px, py = paw
-    ox, oy = px, py + 9  # top of the dome; the handle runs up into the paw
+    ox, oy = px, py + 17  # top of the dome, hanging below the paw
+    # arm + paw first, then the cord out of the fist, a thumb over the cord, then the bell in front
+    s = arm(svg, 96, 198, px, py)
+    cord = f"M{px - 3} {py - 2} Q{px - 4} {py + 9} {ox} {oy + 1} M{px + 3} {py - 2} Q{px + 4} {py + 9} {ox} {oy + 1}"
+    s += (f'<path d="{cord}" stroke="{C["line"]}" stroke-width="6" stroke-linecap="round" fill="none"/>'
+          f'<path d="{cord}" stroke="{C["blue"]}" stroke-width="2.6" stroke-linecap="round" fill="none"/>')
+    s += svg.shaded(circle_d(px + 4, py + 4, 7, 5), C["skin"], C["shade"], off=(-1.5, -1.5), ow=3)  # thumb
     dome = (f"M{f(ox - 5 * sc)} {f(oy + 2 * sc)} C{f(ox - 12 * sc)} {f(oy + 3 * sc)} {f(ox - 14 * sc)} {f(oy + 10 * sc)} "
             f"{f(ox - 14 * sc)} {f(oy + 18 * sc)} C{f(ox - 14 * sc)} {f(oy + 24 * sc)} {f(ox - 17 * sc)} {f(oy + 27 * sc)} "
             f"{f(ox - 19 * sc)} {f(oy + 30 * sc)} L{f(ox + 19 * sc)} {f(oy + 30 * sc)} "
             f"C{f(ox + 17 * sc)} {f(oy + 27 * sc)} {f(ox + 14 * sc)} {f(oy + 24 * sc)} {f(ox + 14 * sc)} {f(oy + 18 * sc)} "
             f"C{f(ox + 14 * sc)} {f(oy + 10 * sc)} {f(ox + 12 * sc)} {f(oy + 3 * sc)} {f(ox + 5 * sc)} {f(oy + 2 * sc)} Z")
-    s = svg.shaded(circle_d(ox, oy + 33 * sc, 4.5 * sc), C["bell_shade"], C["bell_shade"], off=(0, 0), ow=3.5)  # clapper
+    s += svg.shaded(circle_d(ox, oy + 33 * sc, 4.5 * sc), C["bell_shade"], C["bell_shade"], off=(0, 0), ow=3.5)  # clapper
     s += svg.shaded(dome, C["bell"], C["bell_shade"], off=(-3, -3), ow=4.5,
                     hl=[(ox - 7 * sc, oy + 13 * sc, 2.5 * sc, 7 * sc, 12, C["bell_light"], .95)])
     s += svg.shaded(circle_d(ox, oy + 30 * sc, 20 * sc, 4.5 * sc), C["bell"], C["bell_shade"], off=(-2, -1.5), ow=4.5)  # lip
     s += svg.shaded(circle_d(ox, oy + 1, 4.5), C["bell_shade"], C["bell_shade"], off=(0, 0), ow=3)  # top knob
-    return s + arm(svg, 96, 198, px, py)
+    return s
 
 
 def ding(x, y, sc=1.0, toward=-90):
@@ -396,7 +403,7 @@ STATES = {
     "mascot_sleepy": ("translate(12 18) rotate(-11 128 190)", "closed", "smile", "droop", [("zzz",)]),
     "mascot_stretch": ("translate(0 4)", "happy", "open", "sign",
                        [("star", 22, 34, .8), ("star", 28, 210, .55), ("bub", 40, 188, 4.5)]),
-    "mascot_bell": ("", "open", "smile", "bell", [("ding", 40, 206, .9, -150), ("ding", 98, 214, .7, -30)]),
+    "mascot_bell": ("", "open", "smile", "bell", [("ding", 38, 214, .9, -150), ("ding", 100, 222, .7, -30)]),
     "mascot_proud": ("", "happy", "open", "rest",
                      [("star", 26, 34, 1.0), ("star", 232, 30, .9), ("star", 14, 186, .6), ("star", 240, 190, .7)]),
 }

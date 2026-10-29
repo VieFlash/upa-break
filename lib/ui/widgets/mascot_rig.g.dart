@@ -60,7 +60,7 @@ const rigSpecs = <String, RigSpec>{
     nose: Offset(137.0, 129.0),
     leftShoulder: Offset(96, 198),
     rightShoulder: Offset(160, 198),
-    fx: [RigFx('ding', Offset(40.0, 206.0)), RigFx('ding', Offset(98.0, 214.0))],
+    fx: [RigFx('ding', Offset(38.0, 214.0)), RigFx('ding', Offset(100.0, 222.0))],
   ),
   'proud': RigSpec(
     layers: ['shadow', 'body', 'head', 'fx0', 'fx1', 'fx2', 'fx3'],
