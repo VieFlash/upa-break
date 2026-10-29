@@ -66,7 +66,7 @@ tool/setup_android.dart
   (Xiaomi, Oppo, Vivo, Samsung) dựa trên `device_info_plus`.
 - **Xong khi:** từ chối quyền vẫn dùng app được, có đường dẫn rõ ràng để bật lại.
 
-### [ ] T1.4 Nút "Nhắc sau 15 phút" trên thông báo
+### [x] T1.4 Nút "Nhắc sau 15 phút" trên thông báo
 - Thêm notification action "Bắt đầu" và "Để sau 15'" (Android + iOS category).
 - Action "Để sau" xử lý ở background (`onDidReceiveBackgroundNotificationResponse`, hàm top-level
   `@pragma('vm:entry-point')`): lên lịch lại 1 thông báo sau 15 phút, không mở app.

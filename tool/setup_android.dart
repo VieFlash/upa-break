@@ -42,6 +42,16 @@ void _patchManifest() {
     xml = xml.replaceFirst('</application>', receivers.trimLeft().replaceFirst('<receiver', '    <receiver'));
   }
 
+  // Nút action trên thông báo ("Bắt đầu", "Để sau 15'") cần receiver này để plugin nhận sự kiện bấm.
+  if (!xml.contains('ActionBroadcastReceiver')) {
+    xml = xml.replaceFirst(
+      '</application>',
+      '    <receiver android:exported="false" '
+          'android:name="com.dexterous.flutterlocalnotifications.ActionBroadcastReceiver" />\n'
+          '    </application>',
+    );
+  }
+
   // Tên app hiển thị.
   xml = xml.replaceFirst(RegExp(r'android:label="[^"]*"'), 'android:label="Upa Break"');
 

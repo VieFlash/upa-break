@@ -72,10 +72,12 @@ tool/                           setup_android/ios, gen_icons, gen_mascot, render
 - **Thông minh**: đang vượt tiến độ thì nhắc thưa hơn 30 phút, bị chậm thì nhắc sớm hơn 20 phút.
 - **Khiên streak**: mỗi tháng tha 1 ngày lỡ nếu 3 ngày làm việc trước đó đều đạt. Cuối tuần không tính.
 - Dùng `inexactAllowWhileIdle` nên không cần quyền báo thức chính xác (lệch vài phút).
+- **Nút trên thông báo**: "Bắt đầu" mở phiên giãn cơ; "Để sau 15'" xử lý ở background isolate
+  (`onBackgroundNotificationResponse`), hẹn lại 1 lời nhắc sau 15 phút mà không mở app.
+  Android cần `ActionBroadcastReceiver` trong manifest (đã có trong `tool/setup_android.dart`).
 
 ## Việc tiếp theo
 
 - [ ] Ảnh minh họa riêng cho từng bài tập (hiện dùng chung Upa giãn cơ)
-- [ ] Nút "Nhắc sau 15 phút" ngay trên thông báo
 - [ ] Góc làm việc của Upa lên cấp, huy chương
 - [ ] Premium (RevenueCat), widget màn hình chính

@@ -78,4 +78,9 @@ void main() {
     final plan = ReminderPlanner.plan(settings: s, now: at(18, 0, friday), lastBreak: null, doneToday: 0);
     expect(plan.first, at(9, 30, DateTime(2026, 11, 9)));
   });
+
+  test('"Để sau" nhắc lại đúng 15 phút sau, kể cả qua mốc giờ', () {
+    expect(ReminderPlanner.snoozeAt(DateTime(2026, 11, 2, 10, 50)), DateTime(2026, 11, 2, 11, 5));
+    expect(ReminderPlanner.snoozeMinutes, 15);
+  });
 }

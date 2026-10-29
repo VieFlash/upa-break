@@ -12,6 +12,12 @@ class ReminderPlanner {
   /// Nếu lời nhắc đầu tiên đã trễ (ngồi quá lâu), nhắc lại sau bấy nhiêu phút.
   static const overdueDelayMinutes = 10;
 
+  /// Nút "Để sau" trên thông báo: nhắc lại sau bấy nhiêu phút.
+  static const snoozeMinutes = 15;
+
+  /// Thời điểm nhắc lại khi người dùng bấm "Để sau" lúc [now].
+  static DateTime snoozeAt(DateTime now) => now.add(const Duration(minutes: snoozeMinutes));
+
   static List<DateTime> plan({
     required UserSettings settings,
     required DateTime now,
