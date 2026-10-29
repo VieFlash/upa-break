@@ -72,7 +72,7 @@ tool/setup_android.dart
   `@pragma('vm:entry-point')`): lên lịch lại 1 thông báo sau 15 phút, không mở app.
 - **Xong khi:** bấm "Để sau 15'" khi app đã kill vẫn nhận lại thông báo sau 15 phút.
 
-### [ ] T1.5 App icon & splash
+### [x] T1.5 App icon & splash
 - Xuất `assets/mascot/app_icon.svg` ra PNG 1024 (foreground + background cho adaptive icon).
 - Dùng `flutter_launcher_icons` và `flutter_native_splash` (nền kem `#FFF8F0`, mặt Upa ở giữa).
 - **Xong khi:** icon và splash đúng trên Android 12+ và iOS.

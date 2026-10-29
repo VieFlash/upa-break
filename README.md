@@ -20,8 +20,9 @@ fvm flutter create --org app.upabreak --project-name upa_break --platforms andro
 fvm dart run tool/setup_android.dart
 fvm dart run tool/setup_ios.dart
 
-# 3. Sinh icon app Android + iOS từ assets/upa_assets (cần Pillow)
-python3 tool/gen_icons.py
+# 3. Icon app + splash (PNG nguồn đã có sẵn trong assets/icon/, cấu hình trong pubspec.yaml)
+fvm dart run flutter_launcher_icons
+fvm dart run flutter_native_splash:create
 
 # 4. Cài thư viện, chạy test, chạy app
 fvm flutter pub get
@@ -59,8 +60,9 @@ lib/
   ui/widgets/                   Mascot + UpaRig (chuyển động theo trạng thái), form giờ làm
 assets/mascot/                  SVG Upa: mascot_{fresh,slouch,sleepy,stretch,proud,bell}, app_icon
 assets/mascot/rig/              Các lớp SVG cho chuyển động (sinh từ tool/gen_mascot.py)
-assets/upa_assets/              Bản gốc SVG/PNG + icon 1024 (nguồn cho tool/gen_icons.py)
-tool/                           setup_android/ios, gen_icons, gen_mascot, render_mascot
+assets/icon/                    Nguồn icon app + splash (SVG từ gen_mascot.py → PNG 1024 bằng render_mascot.py --icons)
+assets/upa_assets/              Bản gốc SVG/PNG đời đầu (không còn dùng trong build)
+tool/                           setup_android/ios, gen_mascot, render_mascot
 ```
 
 ## Cách hoạt động
@@ -81,3 +83,17 @@ tool/                           setup_android/ios, gen_icons, gen_mascot, render
 - [ ] Ảnh minh họa riêng cho từng bài tập (hiện dùng chung Upa giãn cơ)
 - [ ] Góc làm việc của Upa lên cấp, huy chương
 - [ ] Premium (RevenueCat), widget màn hình chính
+
+## Đổi icon / splash
+
+```bash
+python3 tool/gen_mascot.py                      # sinh lại SVG (gồm assets/icon/*.svg)
+python3 tool/render_mascot.py --icons           # SVG -> PNG 1024 + icon_monochrome (cần cairosvg)
+fvm dart run flutter_launcher_icons
+fvm dart run flutter_native_splash:create
+git checkout ios/Runner/Info.plist ios/Runner.xcodeproj/project.pbxproj   # 2 tool trên format lại / sửa nhầm 1 cờ build
+```
+
+Icon iOS dùng `icon_full.png` (không alpha). Android adaptive icon: nền gradient + mặt Upa nằm trong vùng an toàn 66dp
+(+ monochrome cho themed icon Android 13+). Splash: nền kem `#FFF8F0`, mặt Upa ở giữa (Android 12+ dùng ảnh riêng
+vừa vòng tròn 2/3). Simulator iOS hay giữ ảnh khởi động cũ: khởi động lại simulator nếu splash vẫn trắng.

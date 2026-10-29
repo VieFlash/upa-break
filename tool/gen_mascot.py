@@ -517,17 +517,47 @@ with open("lib/ui/widgets/mascot_rig.g.dart", "w") as fp:
              f"const zSize = {Z_RIG['size']}.0;\n"
              f"const zPad = 5.0; // z.svg viewBox padding around the glyph\n")
 
-# app icon (full) + adaptive foreground (transparent, safe zone)
-for fname, bg, tr in (
-    ("app_icon", '<defs><radialGradient id="bgG" cx=".5" cy=".42" r=".7"><stop offset="0" stop-color="#E9FBFF"/>'
-                 '<stop offset="1" stop-color="#9EDCF2"/></radialGradient></defs>'
-                 '<rect width="256" height="256" rx="58" fill="url(#bgG)"/>', "translate(18 26) scale(.86)"),
-    ("app_icon_foreground", "", "translate(46 50) scale(.64)"),
-):
+# ---- app icon + splash sources. assets/icon/*.svg -> PNG 1024 via `tool/render_mascot.py --icons`,
+# then flutter_launcher_icons / flutter_native_splash (config in pubspec.yaml).
+ICON = "assets/icon"
+os.makedirs(ICON, exist_ok=True)
+ICON_BG = ('<defs><radialGradient id="bgG" cx=".5" cy=".42" r=".7"><stop offset="0" stop-color="#E9FBFF"/>'
+           '<stop offset="1" stop-color="#9EDCF2"/></radialGradient></defs>')
+FACE_CENTER = (128, 100)  # visual centre of gills + head + hat
+FACE_RADIUS = 118         # farthest outline point from FACE_CENTER (gill tips, incl. stroke)
+
+
+def face(svg):
+    return gills(svg) + head(svg) + eyes(svg, "open") + mouth(svg, "smile") + strap() + hat(svg)
+
+
+def centred(svg, radius):
+    """Upa's face scaled so it fits a circle of [radius] around the frame centre."""
+    k = radius / FACE_RADIUS
+    tx, ty = 128 - FACE_CENTER[0] * k, 128 - FACE_CENTER[1] * k
+    return f'<g transform="translate({tx:.2f} {ty:.2f}) scale({k:.4f})">{face(svg)}</g>'
+
+
+ICONS = {
+    # rounded preview (docs/store mock-ups)
+    f"{OUT}/app_icon": (ICON_BG + '<rect width="256" height="256" rx="58" fill="url(#bgG)"/>',
+                        lambda svg: f'<g transform="translate(18 26) scale(.86)">{face(svg)}</g>'
+                        + bub(214, 210, 9) + bub(232, 186, 5)),
+    # iOS + legacy Android: full bleed, no transparency (the OS applies its own mask)
+    f"{ICON}/icon_full": (ICON_BG + '<rect width="256" height="256" fill="url(#bgG)"/>',
+                          lambda svg: f'<g transform="translate(18 26) scale(.86)">{face(svg)}</g>'
+                          + bub(214, 210, 9) + bub(232, 186, 5)),
+    # Android adaptive icon (108dp): face inside the 66dp safe circle -> radius 256*66/108/2 = 78, keep margin
+    f"{ICON}/icon_background": (ICON_BG + '<rect width="256" height="256" fill="url(#bgG)"/>', lambda svg: ""),
+    f"{ICON}/icon_foreground": ("", lambda svg: centred(svg, 77)),
+    f"{OUT}/app_icon_foreground": ("", lambda svg: centred(svg, 77)),
+    # splash: legacy = face on cream; Android 12+ = icon masked to a circle of 2/3 the image -> radius 85
+    f"{ICON}/splash": ("", lambda svg: centred(svg, 124)),
+    f"{ICON}/splash_android12": ("", lambda svg: centred(svg, 80)),
+}
+for path, (bg, draw) in ICONS.items():
     svg = Svg()
-    face = gills(svg) + head(svg) + eyes(svg, "open") + mouth(svg, "smile") + strap() + hat(svg)
-    extra = (bub(214, 210, 9) + bub(232, 186, 5)) if bg else ""
-    with open(f"{OUT}/{fname}.svg", "w") as fp:
-        fp.write(svg.render(f'<g transform="{tr}">{face}</g>' + extra, bg))
+    with open(f"{path}.svg", "w") as fp:
+        fp.write(svg.render(draw(svg), bg))
 
 print("ok:", sorted(os.listdir(OUT)))

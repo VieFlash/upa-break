@@ -3,6 +3,7 @@
   python3 tool/render_mascot.py                 # preview sheet -> build/mascot_preview.png
   python3 tool/render_mascot.py --zoom mascot_fresh   # one file at 640px -> build/zoom_<name>.png
   python3 tool/render_mascot.py --export        # PNG @1x/@2x/@3x + icon 1024 -> build/png/
+  python3 tool/render_mascot.py --icons         # assets/icon/*.svg -> 1024 PNG (+ monochrome) cho launcher icon/splash
 
 Requires: pip install cairosvg pillow
 (Windows: run inside WSL, or install the GTK3 runtime so cairosvg can find libcairo.)
@@ -59,15 +60,38 @@ def export():
     print(d)
 
 
+def icons():
+    """PNG nguồn cho flutter_launcher_icons / flutter_native_splash (cấu hình trong pubspec.yaml)."""
+    d = "assets/icon"
+    for f in sorted(glob.glob(f"{d}/*.svg")):
+        name = os.path.splitext(os.path.basename(f))[0]
+        im = render(f, 1024)
+        if name == "icon_full":
+            im = im.convert("RGB")  # App Store từ chối icon có kênh alpha
+        im.save(os.path.join(d, f"{name}.png"))
+        if name == "icon_foreground":
+            # themed icon Android 13+: 1 màu, hệ thống tự tô. Giữ nét viền + mắt + miệng (pixel tối)
+            # để vẫn nhận ra mặt Upa, thay vì một khối bóng trơn.
+            dark = im.convert("L").point(lambda v: 255 if v < 110 else 0)
+            alpha = Image.composite(dark, Image.new("L", im.size, 0), im.getchannel("A"))
+            mono = Image.new("RGBA", im.size, (255, 255, 255, 0))
+            mono.putalpha(alpha)
+            mono.save(os.path.join(d, "icon_monochrome.png"))
+    print(d, sorted(os.listdir(d)))
+
+
 if __name__ == "__main__":
     os.makedirs(BUILD, exist_ok=True)
     ap = argparse.ArgumentParser()
     ap.add_argument("--zoom")
     ap.add_argument("--export", action="store_true")
+    ap.add_argument("--icons", action="store_true")
     a = ap.parse_args()
     if a.zoom:
         zoom(a.zoom)
     elif a.export:
         export()
+    elif a.icons:
+        icons()
     else:
         preview()
