@@ -6,6 +6,8 @@ App nhắc giãn cơ cho dân văn phòng. Upa - chú kỳ nhông văn phòng đ
 
 Yêu cầu: Flutter 3.38+ (project ghim bản stable qua FVM, chạy lệnh bằng `fvm flutter` / `fvm dart`), Android Studio / Android SDK, Xcode.
 iOS 27 bắt buộc UIScene lifecycle nên Flutter cũ hơn 3.38 sẽ crash khi mở app.
+Android SDK cần có *Command-line Tools* và đã chấp nhận license (`fvm flutter doctor --android-licenses`),
+nếu không Gradle không tự tải được NDK (lỗi `NDK ... did not have a source.properties file`; cũng xảy ra khi ổ đĩa đầy).
 
 ```bash
 cd upa_break
@@ -47,8 +49,9 @@ lib/
   services/notification_service.dart  Lên lịch local notification
   state/app_state.dart          ChangeNotifier: trạng thái Upa, số liệu, hành động
   ui/screens/                   Onboarding, Hôm nay, Bài tập, Nhật ký, Cài đặt, Phiên tập
-  ui/widgets/                   Mascot (SVG + thở/nhấp nhô), form giờ làm
+  ui/widgets/                   Mascot + UpaRig (chuyển động theo trạng thái), form giờ làm
 assets/mascot/                  SVG Upa: mascot_{fresh,slouch,sleepy,stretch,proud}, app_icon
+assets/mascot/rig/              Các lớp SVG cho chuyển động (sinh từ tool/gen_mascot.py)
 assets/upa_assets/              Bản gốc SVG/PNG + icon 1024 (nguồn cho tool/gen_icons.py)
 tool/                           setup_android/ios, gen_icons, gen_mascot, render_mascot
 ```

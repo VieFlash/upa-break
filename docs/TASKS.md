@@ -48,7 +48,7 @@ tool/setup_android.dart
 
 ## Giai đoạn 1 – Chạy ổn định bản MVP
 
-### [ ] T1.1 Build và sửa lỗi lần đầu
+### [x] T1.1 Build và sửa lỗi lần đầu
 - Chạy `flutter create` theo README, `dart run tool/setup_android.dart`, `flutter pub get`.
 - Sửa mọi lỗi compile/analyze (có thể do lệch phiên bản API của `flutter_local_notifications`, `CardThemeData`, `PopScope`…).
 - **Xong khi:** `flutter analyze` sạch, 16 test pass, app chạy trên emulator, đi hết onboarding → Hôm nay → Giãn cơ → Nhật ký.
