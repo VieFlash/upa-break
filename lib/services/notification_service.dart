@@ -14,6 +14,7 @@ class NotificationService {
   static const _payloadBreak = 'break';
   static const _baseId = 1000;
   static const _testId = 1;
+  static const _testScheduledId = 2;
 
   final _plugin = FlutterLocalNotificationsPlugin();
 
@@ -80,8 +81,11 @@ class NotificationService {
   }
 
   /// Xóa lịch cũ và đặt lại toàn bộ (rolling schedule).
+  /// Chỉ hủy lời nhắc của lịch (id >= [_baseId]) để không xóa thông báo thử đang chờ.
   Future<void> scheduleAll(List<DateTime> times) async {
-    await _plugin.cancelAll();
+    for (final p in await _plugin.pendingNotificationRequests()) {
+      if (p.id >= _baseId) await _plugin.cancel(p.id);
+    }
     for (var i = 0; i < times.length; i++) {
       final (title, body) = _messages[(times[i].hour + times[i].minute + i) % _messages.length];
       // Dùng UTC với đúng thời điểm tuyệt đối => không cần biết tên múi giờ của máy.
@@ -106,6 +110,40 @@ class NotificationService {
         _details,
         payload: _payloadBreak,
       );
+
+  /// Hẹn một thông báo thử sau [delay] (màn debug) - kiểm tra lịch hoạt động khi app bị tắt.
+  Future<DateTime> scheduleTest(Duration delay) async {
+    final at = DateTime.now().add(delay);
+    await _plugin.zonedSchedule(
+      _testScheduledId,
+      'Upa nhắc thử ⏰',
+      'Lời nhắc hẹn giờ hoạt động tốt. Chạm để giãn cơ.',
+      tz.TZDateTime.from(at, tz.UTC),
+      _details,
+      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+      payload: _payloadBreak,
+    );
+    return at;
+  }
+
+  /// Các thông báo đang chờ trong hệ điều hành.
+  Future<List<PendingNotificationRequest>> pending() => _plugin.pendingNotificationRequests();
+
+  /// Quyền hiện thông báo: true/false, hoặc null nếu không xác định được.
+  Future<bool?> permissionGranted() async {
+    if (Platform.isAndroid) {
+      return _plugin
+          .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+          ?.areNotificationsEnabled();
+    }
+    if (Platform.isIOS) {
+      final opts = await _plugin
+          .resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()
+          ?.checkPermissions();
+      return opts?.isEnabled;
+    }
+    return null;
+  }
 
   Future<void> cancelAll() => _plugin.cancelAll();
 }

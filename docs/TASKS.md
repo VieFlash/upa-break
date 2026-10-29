@@ -53,7 +53,7 @@ tool/setup_android.dart
 - Sửa mọi lỗi compile/analyze (có thể do lệch phiên bản API của `flutter_local_notifications`, `CardThemeData`, `PopScope`…).
 - **Xong khi:** `flutter analyze` sạch, 16 test pass, app chạy trên emulator, đi hết onboarding → Hôm nay → Giãn cơ → Nhật ký.
 
-### [ ] T1.2 Kiểm thử thông báo thực tế
+### [x] T1.2 Kiểm thử thông báo thực tế
 - Thêm màn hình debug ẩn (nhấn giữ tiêu đề "Cài đặt" 3 giây) hiển thị: danh sách mốc nhắc đã lên lịch
   (`ReminderPlanner.plan`), `pendingNotificationRequests()`, trạng thái quyền thông báo.
 - Thêm nút "Nhắc thử sau 1 phút" (lên lịch 1 thông báo sau 60 giây).

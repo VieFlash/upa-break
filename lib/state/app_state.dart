@@ -155,18 +155,21 @@ class AppState extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Các mốc nhắc theo kế hoạch hiện tại (dùng cho lịch thông báo và màn debug).
+  List<DateTime> plannedReminders() => ReminderPlanner.plan(
+        settings: _settings,
+        now: now,
+        lastBreak: lastBreak,
+        doneToday: todayCount,
+        pausedUntil: pausedUntil,
+      );
+
   Future<void> reschedule() async {
     if (!_settings.onboarded) {
       _nextReminder = null;
       return;
     }
-    final times = ReminderPlanner.plan(
-      settings: _settings,
-      now: now,
-      lastBreak: lastBreak,
-      doneToday: todayCount,
-      pausedUntil: pausedUntil,
-    );
+    final times = plannedReminders();
     _nextReminder = times.isEmpty ? null : times.first;
     try {
       await notifications.scheduleAll(times);

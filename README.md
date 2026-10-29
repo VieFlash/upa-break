@@ -32,6 +32,8 @@ fvm flutter run
 ## Thử nhanh lịch nhắc
 
 - Cài đặt → **Gửi thông báo thử**: kiểm tra quyền thông báo.
+- Màn debug ẩn: **nhấn giữ tiêu đề "Cài đặt" 3 giây** → xem quyền thông báo, các mốc nhắc theo kế hoạch,
+  thông báo đang chờ trong hệ thống, và nút **Nhắc thử sau 1 phút** (tắt app để thử lịch hẹn thật).
 - Muốn thấy lời nhắc thật nhanh: chọn kiểu **Chăm chỉ** và đặt giờ vào làm sớm hơn giờ hiện tại khoảng 50 phút.
 - Máy Xiaomi/Oppo/Vivo: bật "Pin: Không giới hạn" và "Tự khởi động" cho app, nếu không lời nhắc có thể bị chặn.
 

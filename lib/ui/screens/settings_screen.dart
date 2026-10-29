@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io' show Platform;
 
 import 'package:flutter/material.dart';
@@ -5,6 +6,7 @@ import 'package:flutter/material.dart';
 import '../../models/settings.dart';
 import '../../state/app_state.dart';
 import '../widgets/schedule_form.dart';
+import 'debug_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -25,7 +27,13 @@ class SettingsScreen extends StatelessWidget {
     }
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Cài đặt'), backgroundColor: Colors.transparent),
+      appBar: AppBar(
+        title: _HoldToOpen(
+          onOpen: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const DebugScreen())),
+          child: const Text('Cài đặt'),
+        ),
+        backgroundColor: Colors.transparent,
+      ),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 0, 20, 32),
         children: [
@@ -95,4 +103,40 @@ class SettingsScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Nhấn giữ [child] đủ 3 giây thì gọi [onOpen] (lối vào màn debug ẩn).
+class _HoldToOpen extends StatefulWidget {
+  const _HoldToOpen({required this.onOpen, required this.child});
+
+  final VoidCallback onOpen;
+  final Widget child;
+
+  @override
+  State<_HoldToOpen> createState() => _HoldToOpenState();
+}
+
+class _HoldToOpenState extends State<_HoldToOpen> {
+  static const _hold = Duration(seconds: 3);
+  Timer? _timer;
+
+  void _cancel([_]) => _timer?.cancel();
+
+  @override
+  void dispose() {
+    _cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => Listener(
+        behavior: HitTestBehavior.opaque,
+        onPointerDown: (_) {
+          _cancel();
+          _timer = Timer(_hold, widget.onOpen);
+        },
+        onPointerUp: _cancel,
+        onPointerCancel: _cancel,
+        child: widget.child,
+      );
 }
