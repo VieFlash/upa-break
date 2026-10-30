@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../../l10n/l10n.dart';
 import '../../logic/battery_guide.dart';
+import '../../logic/break_cues.dart';
 import '../../models/settings.dart';
 import '../../services/system_settings.dart';
 import '../../state/app_state.dart';
@@ -101,6 +102,30 @@ class SettingsScreen extends StatelessWidget {
                 await state.notifications.requestPermission();
                 await state.notifications.showTest();
               },
+            ),
+          ),
+          SectionTitle(l.sectionSoundVibration),
+          Card(
+            child: Column(
+              children: [
+                SwitchListTile(
+                  secondary: Icon(s.soundOn ? Icons.volume_up_outlined : Icons.volume_off_outlined),
+                  title: Text(l.soundToggle),
+                  subtitle: Text(l.soundToggleSub),
+                  value: s.soundOn,
+                  onChanged: (v) {
+                    state.updateSettings(s.copyWith(soundOn: v));
+                    if (v) state.sounds.play(Cue.done); // nghe thử khi bật lại
+                  },
+                ),
+                SwitchListTile(
+                  secondary: const Icon(Icons.vibration),
+                  title: Text(l.vibrateToggle),
+                  subtitle: Text(l.vibrateToggleSub),
+                  value: s.vibrateOn,
+                  onChanged: (v) => state.updateSettings(s.copyWith(vibrateOn: v)),
+                ),
+              ],
             ),
           ),
           if (Platform.isAndroid) ...[

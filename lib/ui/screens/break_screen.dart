@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import '../../data/exercises.dart';
 import '../../l10n/l10n.dart';
+import '../../logic/break_cues.dart';
 import '../../models/exercise.dart';
 import '../../models/settings.dart';
 import '../../state/app_state.dart';
@@ -67,16 +67,13 @@ class _BreakScreenState extends State<BreakScreen> {
     setState(() {
       _remaining--;
       if (_phase == _Phase.exercise) _elapsedTotal++;
-      if (_remaining > 0) {
-        if (_remaining <= 3) HapticFeedback.selectionClick();
-        return;
-      }
+      AppScope.read(context).cue(cueAfterTick(remaining: _remaining, exercising: _phase == _Phase.exercise));
+      if (_remaining > 0) return;
       if (_phase == _Phase.ready) {
         _phase = _Phase.exercise;
         _remaining = _ex.seconds;
       } else {
         _completed++;
-        HapticFeedback.mediumImpact();
         _goNext();
       }
     });

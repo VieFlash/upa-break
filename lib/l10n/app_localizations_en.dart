@@ -361,6 +361,22 @@ class AppLocalizationsEn extends AppLocalizations {
       'Check that reminders show up on your phone';
 
   @override
+  String get sectionSoundVibration => 'Sound & vibration';
+
+  @override
+  String get soundToggle => 'Sounds during stretches';
+
+  @override
+  String get soundToggleSub =>
+      'A soft tick in the last 3 seconds and a chime when an exercise ends. Quiet, and muted when your phone is on silent.';
+
+  @override
+  String get vibrateToggle => 'Vibration';
+
+  @override
+  String get vibrateToggleSub => 'Gentle vibration with the countdown';
+
+  @override
   String get sectionOnTime => 'On-time reminders';
 
   @override

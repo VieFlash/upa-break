@@ -93,7 +93,7 @@ tool/setup_android.dart
 - Thêm trường `frames` vào `Exercise`; fallback về `mascot_stretch.svg` nếu thiếu.
 - **Xong khi:** 18 bài đều có khung riêng; người chưa đọc hướng dẫn vẫn hiểu động tác.
 
-### [ ] T2.3 Âm thanh & giọng đếm
+### [x] T2.3 Âm thanh & giọng đếm
 - Tiếng "tách" nhẹ mỗi giây cuối, tiếng chuông khi xong bài (`audioplayers` hoặc `just_audio`).
 - Tùy chọn trong Cài đặt: Âm thanh bật/tắt, Rung bật/tắt. Tôn trọng chế độ im lặng.
 - **Xong khi:** mặc định không gây ồn nơi công sở (âm lượng nhỏ, có thể tắt).

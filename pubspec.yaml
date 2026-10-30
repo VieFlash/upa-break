@@ -19,6 +19,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   intl: any
+  audioplayers: ^6.8.1
 
 dev_dependencies:
   flutter_test:
@@ -33,6 +34,7 @@ flutter:
     - assets/mascot/
     - assets/mascot/rig/
     - assets/exercises/
+    - assets/sounds/
 
 # Icon app: nguồn sinh từ tool/gen_mascot.py -> `python3 tool/render_mascot.py --icons`,
 # rồi `fvm dart run flutter_launcher_icons`.

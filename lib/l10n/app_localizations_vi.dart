@@ -356,6 +356,22 @@ class AppLocalizationsVi extends AppLocalizations {
       'Kiểm tra xem điện thoại có hiện lời nhắc không';
 
   @override
+  String get sectionSoundVibration => 'Âm thanh & rung';
+
+  @override
+  String get soundToggle => 'Âm thanh khi tập';
+
+  @override
+  String get soundToggleSub =>
+      'Tiếng \"tách\" ở 3 giây cuối và chuông khi xong bài. Âm lượng nhỏ, tự im khi máy để im lặng.';
+
+  @override
+  String get vibrateToggle => 'Rung';
+
+  @override
+  String get vibrateToggleSub => 'Rung nhẹ theo nhịp đếm';
+
+  @override
   String get sectionOnTime => 'Nhắc đúng giờ';
 
   @override

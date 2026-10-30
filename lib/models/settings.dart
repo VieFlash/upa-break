@@ -46,6 +46,12 @@ class UserSettings {
   /// Ngôn ngữ người dùng chọn ('vi' / 'en'); null = theo ngôn ngữ máy.
   final String? language;
 
+  /// Tiếng "tách" / chuông trong phiên giãn cơ (âm lượng nhỏ, tự im khi máy ở chế độ im lặng).
+  final bool soundOn;
+
+  /// Rung nhẹ theo nhịp đếm.
+  final bool vibrateOn;
+
   const UserSettings({
     this.workStart = 8 * 60 + 30,
     this.workEnd = 17 * 60 + 30,
@@ -57,6 +63,8 @@ class UserSettings {
     this.focusAreas = const {BodyArea.neck, BodyArea.shoulders, BodyArea.back},
     this.onboarded = false,
     this.language,
+    this.soundOn = true,
+    this.vibrateOn = true,
   });
 
   int get workMinutes {
@@ -97,6 +105,8 @@ class UserSettings {
     Set<BodyArea>? focusAreas,
     bool? onboarded,
     Object? language = _keep,
+    bool? soundOn,
+    bool? vibrateOn,
   }) =>
       UserSettings(
         workStart: workStart ?? this.workStart,
@@ -109,6 +119,8 @@ class UserSettings {
         focusAreas: focusAreas ?? this.focusAreas,
         onboarded: onboarded ?? this.onboarded,
         language: identical(language, _keep) ? this.language : language as String?,
+        soundOn: soundOn ?? this.soundOn,
+        vibrateOn: vibrateOn ?? this.vibrateOn,
       );
 
   Map<String, dynamic> toJson() => {
@@ -122,6 +134,8 @@ class UserSettings {
         'focusAreas': focusAreas.map((a) => a.name).toList(),
         'onboarded': onboarded,
         if (language != null) 'language': language,
+        'soundOn': soundOn,
+        'vibrateOn': vibrateOn,
       };
 
   factory UserSettings.fromJson(Map<String, dynamic> j) {
@@ -144,6 +158,8 @@ class UserSettings {
           d.focusAreas,
       onboarded: j['onboarded'] as bool? ?? false,
       language: j['language'] as String?,
+      soundOn: j['soundOn'] as bool? ?? d.soundOn,
+      vibrateOn: j['vibrateOn'] as bool? ?? d.vibrateOn,
     );
   }
 }

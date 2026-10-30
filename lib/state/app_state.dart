@@ -1,26 +1,31 @@
 import 'dart:ui' show PlatformDispatcher;
 
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
 import '../data/storage.dart';
+import '../logic/break_cues.dart';
 import '../logic/language.dart';
 import '../logic/reminder_planner.dart';
 import '../logic/streak.dart';
 import '../models/break_log.dart';
 import '../models/settings.dart';
 import '../services/notification_service.dart';
+import '../services/sound_service.dart';
 
 enum Mood { fresh, slouch, sleepy, stretch, proud, offHours }
 
 class AppState extends ChangeNotifier {
-  AppState(this._storage, this.notifications)
-      : _settings = _storage.loadSettings(),
+  AppState(this._storage, this.notifications, {SoundService? sounds})
+      : sounds = sounds ?? SoundService(),
+        _settings = _storage.loadSettings(),
         _logs = _storage.loadLogs(),
         _pausedUntil = _storage.loadPausedUntil(),
         _fish = _storage.loadFish();
 
   final Storage _storage;
   final NotificationService notifications;
+  final SoundService sounds;
 
   UserSettings _settings;
   List<BreakLog> _logs;
@@ -212,6 +217,13 @@ class AppState extends ChangeNotifier {
     } catch (e) {
       debugPrint('Không lên lịch được thông báo: $e');
     }
+  }
+
+  /// Tín hiệu trong phiên giãn cơ: âm thanh + rung, theo công tắc trong Cài đặt.
+  void cue(Cue c) {
+    if (c == Cue.none) return;
+    if (_settings.soundOn) sounds.play(c);
+    if (_settings.vibrateOn) c == Cue.done ? HapticFeedback.mediumImpact() : HapticFeedback.selectionClick();
   }
 
   /// Gọi mỗi phút / khi app quay lại foreground để cập nhật trạng thái Upa.

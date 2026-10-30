@@ -55,17 +55,20 @@ lib/
   logic/streak.dart             Streak + khiên streak (hàm thuần, có test)
   logic/battery_guide.dart      Nhận diện hãng máy để hiện hướng dẫn tắt tối ưu pin (hàm thuần, có test)
   logic/language.dart           Chọn ngôn ngữ: người dùng chọn > ngôn ngữ máy > tiếng Anh (có test)
+  logic/break_cues.dart         Lúc nào kêu "tách" / chuông trong phiên tập (hàm thuần, có test)
   services/notification_service.dart  Lên lịch local notification
   services/system_settings.dart       Mở cài đặt thông báo / tối ưu pin / ứng dụng (Android + iOS)
+  services/sound_service.dart         Phát tick/chuông (audioplayers, âm lượng nhỏ, tôn trọng chế độ im lặng)
   state/app_state.dart          ChangeNotifier: trạng thái Upa, số liệu, hành động
   ui/screens/                   Onboarding, Hôm nay, Bài tập, Nhật ký, Cài đặt, Phiên tập
   ui/widgets/                   Mascot + UpaRig (chuyển động theo trạng thái), form giờ làm
 assets/mascot/                  SVG Upa: mascot_{fresh,slouch,sleepy,stretch,proud,bell}, app_icon
 assets/mascot/rig/              Các lớp SVG cho chuyển động (sinh từ tool/gen_mascot.py)
 assets/exercises/               Hình minh họa bài tập <id>_<n>.svg, 2-3 khung/bài (sinh từ tool/gen_exercises.py)
+assets/sounds/                  tick.wav, chime.wav (sinh từ tool/gen_sounds.py)
 assets/icon/                    Nguồn icon app + splash (SVG từ gen_mascot.py → PNG 1024 bằng render_mascot.py --icons)
 assets/upa_assets/              Bản gốc SVG/PNG đời đầu (không còn dùng trong build)
-tool/                           setup_android/ios, gen_mascot, gen_exercises, render_mascot
+tool/                           setup_android/ios, gen_mascot, gen_exercises, gen_sounds, render_mascot
 ```
 
 ## Cách hoạt động
@@ -108,3 +111,10 @@ vừa vòng tròn 2/3). Simulator iOS hay giữ ảnh khởi động cũ: khởi
   `exerciseName`/`exerciseSteps` trong `lib/l10n/l10n.dart` (test `l10n_test.dart` sẽ báo nếu quên).
 - Ngôn ngữ mặc định theo máy (máy dùng ngôn ngữ khác thì tiếng Anh); đổi trong Cài đặt → Ngôn ngữ.
   Thông báo đã hẹn được đặt lại theo ngôn ngữ mới; nút "Để sau" chạy nền lấy ngôn ngữ từ payload `break:<lang>`.
+
+## Âm thanh & rung
+
+- Tiếng "tách" ở 3 giây cuối (cả lúc chuẩn bị) và chuông khi tập xong một bài (bấm "Bỏ qua" thì không có chuông).
+- Âm lượng 35%; iOS dùng category `ambient` (tự im theo công tắc im lặng, không ngắt nhạc đang phát);
+  Android phát kênh `USAGE_ASSISTANCE_SONIFICATION` (tự im khi máy để im lặng / rung), không giành audio focus.
+- Cài đặt → Âm thanh & rung: tắt âm thanh, tắt rung (mặc định bật). Sinh lại âm: `python3 tool/gen_sounds.py`.

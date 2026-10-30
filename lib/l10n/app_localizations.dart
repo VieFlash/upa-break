@@ -668,6 +668,36 @@ abstract class AppLocalizations {
   /// **'Kiểm tra xem điện thoại có hiện lời nhắc không'**
   String get sendTestNotificationSub;
 
+  /// No description provided for @sectionSoundVibration.
+  ///
+  /// In vi, this message translates to:
+  /// **'Âm thanh & rung'**
+  String get sectionSoundVibration;
+
+  /// No description provided for @soundToggle.
+  ///
+  /// In vi, this message translates to:
+  /// **'Âm thanh khi tập'**
+  String get soundToggle;
+
+  /// No description provided for @soundToggleSub.
+  ///
+  /// In vi, this message translates to:
+  /// **'Tiếng \"tách\" ở 3 giây cuối và chuông khi xong bài. Âm lượng nhỏ, tự im khi máy để im lặng.'**
+  String get soundToggleSub;
+
+  /// No description provided for @vibrateToggle.
+  ///
+  /// In vi, this message translates to:
+  /// **'Rung'**
+  String get vibrateToggle;
+
+  /// No description provided for @vibrateToggleSub.
+  ///
+  /// In vi, this message translates to:
+  /// **'Rung nhẹ theo nhịp đếm'**
+  String get vibrateToggleSub;
+
   /// No description provided for @sectionOnTime.
   ///
   /// In vi, this message translates to:
