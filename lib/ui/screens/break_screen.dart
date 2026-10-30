@@ -9,6 +9,7 @@ import '../../models/exercise.dart';
 import '../../models/settings.dart';
 import '../../state/app_state.dart';
 import '../theme.dart';
+import '../widgets/celebration.dart';
 import '../widgets/exercise_frames.dart';
 import '../widgets/mascot.dart';
 
@@ -45,6 +46,7 @@ class _BreakScreenState extends State<BreakScreen> {
   bool _paused = false;
   int _completed = 0;
   int _reward = 0;
+  bool _celebrate = false;
   bool _logged = false;
   Timer? _timer;
 
@@ -100,7 +102,12 @@ class _BreakScreenState extends State<BreakScreen> {
     _logged = true;
     final ids = widget.exercises.take(_completed).map((e) => e.id).toList();
     final r = await AppScope.read(context).logBreak(ids, _elapsedTotal);
-    if (mounted) setState(() => _reward = r);
+    if (mounted) {
+      setState(() {
+        _reward = r.reward;
+        _celebrate = r.celebrate;
+      });
+    }
   }
 
   Future<void> _exit() async {
@@ -124,8 +131,12 @@ class _BreakScreenState extends State<BreakScreen> {
               : Text(context.l10n.exerciseProgress(_current + 1, widget.exercises.length)),
           centerTitle: true,
         ),
-        body: SafeArea(
-          child: _phase == _Phase.done ? _doneView(context) : _exerciseView(context),
+        body: Stack(
+          children: [
+            SafeArea(child: _phase == _Phase.done ? _doneView(context) : _exerciseView(context)),
+            // pháo giấy khi lần này vừa đạt mục tiêu ngày (mỗi ngày tối đa 1 lần)
+            if (_phase == _Phase.done && _celebrate) const Positioned.fill(child: Celebration()),
+          ],
         ),
       ),
     );
@@ -226,7 +237,8 @@ class _BreakScreenState extends State<BreakScreen> {
           ),
           const SizedBox(height: 12),
           if (!nothing) ...[
-            Text(l.fishReward(_reward), style: t.titleLarge),
+            // chỉ hiện khi đã ghi xong lần tập (tránh nháy "+0" trong tích tắc đầu)
+            if (_reward > 0) Text(l.fishReward(_reward), style: t.titleLarge),
             const SizedBox(height: 8),
             Text(l.todayProgress(state.todayCount, state.dailyGoal) +
                 (state.streak > 0 ? l.streakSuffix(state.streak) : '')),

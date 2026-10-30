@@ -98,7 +98,7 @@ tool/setup_android.dart
 - Tùy chọn trong Cài đặt: Âm thanh bật/tắt, Rung bật/tắt. Tôn trọng chế độ im lặng.
 - **Xong khi:** mặc định không gây ồn nơi công sở (âm lượng nhỏ, có thể tắt).
 
-### [ ] T2.4 Mascot sống động hơn
+### [x] T2.4 Mascot sống động hơn
 - Chớp mắt ngẫu nhiên (tách nhóm `eyes` trong SVG hoặc chuyển mascot sang Rive với state machine
   input `sitMinutes` và trigger `stretch`).
 - Hiệu ứng confetti/sao khi đạt mục tiêu (Lottie).

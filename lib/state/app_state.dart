@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 
 import '../data/storage.dart';
 import '../logic/break_cues.dart';
+import '../logic/celebration.dart';
 import '../logic/language.dart';
 import '../logic/reminder_planner.dart';
 import '../logic/streak.dart';
@@ -164,17 +165,26 @@ class AppState extends ChangeNotifier {
   }
 
   /// Trả về số cá khô nhận được.
-  Future<int> logBreak(List<String> exerciseIds, int seconds) async {
+  /// Ghi một lần giãn cơ. Trả về số cá khô được thưởng và có bắn pháo giấy ăn mừng không
+  /// (lần này vừa chạm mục tiêu ngày, mỗi ngày tối đa 1 lần).
+  Future<({int reward, bool celebrate})> logBreak(List<String> exerciseIds, int seconds) async {
     final wasGoalReached = goalReachedToday;
     _logs = [..._logs, BreakLog(at: now, exerciseIds: exerciseIds, seconds: seconds)];
     var reward = 1;
     if (!wasGoalReached && goalReachedToday) reward += 3; // thưởng thêm khi đạt mục tiêu
     _fish += reward;
+    final celebrate = shouldCelebrate(
+      wasGoalReached: wasGoalReached,
+      goalReachedNow: goalReachedToday,
+      now: now,
+      lastCelebrated: _storage.loadCelebratedOn(),
+    );
+    if (celebrate) await _storage.saveCelebratedOn(now);
     await _storage.saveLogs(_logs);
     await _storage.saveFish(_fish);
     await reschedule();
     notifyListeners();
-    return reward;
+    return (reward: reward, celebrate: celebrate);
   }
 
   /// [duration] = null nghĩa là tạm dừng tới hết giờ làm hôm nay.

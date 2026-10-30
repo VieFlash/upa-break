@@ -11,6 +11,7 @@ class Storage {
   static const _kLogs = 'logs_v1';
   static const _kPausedUntil = 'paused_until_v1';
   static const _kFish = 'fish_v1';
+  static const _kCelebratedOn = 'celebrated_on_v1';
 
   /// Giữ lại tối đa 120 ngày lịch sử trên máy.
   static const keepDays = 120;
@@ -63,4 +64,9 @@ class Storage {
   int loadFish() => _prefs.getInt(_kFish) ?? 0;
 
   Future<void> saveFish(int v) => _prefs.setInt(_kFish, v);
+
+  /// Lần gần nhất bắn pháo giấy ăn mừng đạt mục tiêu (mỗi ngày tối đa 1 lần).
+  DateTime? loadCelebratedOn() => DateTime.tryParse(_prefs.getString(_kCelebratedOn) ?? '');
+
+  Future<void> saveCelebratedOn(DateTime t) => _prefs.setString(_kCelebratedOn, t.toIso8601String());
 }

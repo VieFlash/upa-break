@@ -56,12 +56,13 @@ lib/
   logic/battery_guide.dart      Nhận diện hãng máy để hiện hướng dẫn tắt tối ưu pin (hàm thuần, có test)
   logic/language.dart           Chọn ngôn ngữ: người dùng chọn > ngôn ngữ máy > tiếng Anh (có test)
   logic/break_cues.dart         Lúc nào kêu "tách" / chuông trong phiên tập (hàm thuần, có test)
+  logic/celebration.dart        Có bắn pháo giấy không: vừa chạm mục tiêu ngày, tối đa 1 lần/ngày (có test)
   services/notification_service.dart  Lên lịch local notification
   services/system_settings.dart       Mở cài đặt thông báo / tối ưu pin / ứng dụng (Android + iOS)
   services/sound_service.dart         Phát tick/chuông (audioplayers, âm lượng nhỏ, tôn trọng chế độ im lặng)
   state/app_state.dart          ChangeNotifier: trạng thái Upa, số liệu, hành động
   ui/screens/                   Onboarding, Hôm nay, Bài tập, Nhật ký, Cài đặt, Phiên tập
-  ui/widgets/                   Mascot + UpaRig (chuyển động theo trạng thái), form giờ làm
+  ui/widgets/                   Mascot + UpaRig (chuyển động, chớp mắt ngẫu nhiên), Celebration (pháo giấy), form giờ làm
 assets/mascot/                  SVG Upa: mascot_{fresh,slouch,sleepy,stretch,proud,bell}, app_icon
 assets/mascot/rig/              Các lớp SVG cho chuyển động (sinh từ tool/gen_mascot.py)
 assets/exercises/               Hình minh họa bài tập <id>_<n>.svg, 2-3 khung/bài (sinh từ tool/gen_exercises.py)

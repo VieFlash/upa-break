@@ -156,16 +156,33 @@ class _UpaRigState extends State<UpaRig> with SingleTickerProviderStateMixin {
     return (m: id, opacity: 1);
   }
 
-  /// Chớp mắt mỗi 4 giây (thỉnh thoảng chớp đôi).
+  /// Lịch chớp mắt ngẫu nhiên: cách nhau 2.5-6 giây, khoảng 1/4 số lần chớp đôi. Sinh sẵn một chu kỳ dài
+  /// (seed cố định, lặp lại sau ~4 phút) để mỗi khung hình chỉ cần tra, không tạo số ngẫu nhiên.
+  static final List<(double, bool)> _blinkPlan = () {
+    final r = math.Random(20261030);
+    var at = 1.5;
+    return [
+      for (var i = 0; i < 60; i++)
+        (at += 2.5 + r.nextDouble() * 3.5, r.nextDouble() < .25),
+    ];
+  }();
+  static final double _blinkCycle = _blinkPlan.last.$1 + 3;
+
+  /// Độ mở mắt (1 = mở, ~0.1 = nhắm) tại thời điểm [t].
   static double _blink(double t) {
-    final p = t % 4.0;
+    final p = t % _blinkCycle;
     double one(double start) {
       final q = (p - start) / .16;
       return (q >= 0 && q <= 1) ? 1 - .9 * math.sin(q * math.pi) : 1;
     }
 
-    final doubleBlink = (t / 4).floor() % 3 == 2;
-    return math.min(one(0), doubleBlink ? one(.25) : 1);
+    var open = 1.0;
+    for (final (start, twice) in _blinkPlan) {
+      if (start > p) break;
+      if (p - start > .6) continue;
+      open = math.min(open, math.min(one(start), twice ? one(start + .25) : 1));
+    }
+    return open;
   }
 
   /// Độ mạnh của đợt lắc chuông: lắc 1.2 giây rồi nghỉ 1.2 giây (0 = đứng yên).
