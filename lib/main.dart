@@ -11,8 +11,8 @@ Future<void> main() async {
   final storage = await Storage.open();
   late final AppState state;
   final notifications = NotificationService(onTapBreak: () => openBreakFromNotification(state));
-  await notifications.init();
   state = AppState(storage, notifications);
+  await notifications.init(state.language);
 
   runApp(UpaBreakApp(state: state));
 

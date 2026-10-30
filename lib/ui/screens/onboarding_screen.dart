@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/l10n.dart';
 import '../../models/settings.dart';
 import '../../state/app_state.dart';
 import '../widgets/mascot.dart';
@@ -32,7 +33,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   Future<void> _finish() async {
     if (_s.workEnd <= _s.workStart) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Giờ tan làm phải sau giờ vào làm nhé.')),
+        SnackBar(content: Text(context.l10n.workEndBeforeStart)),
       );
       return;
     }
@@ -48,6 +49,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l = context.l10n;
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -94,13 +96,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     TextButton(
                       onPressed: () => _page.previousPage(
                           duration: const Duration(milliseconds: 300), curve: Curves.easeOut),
-                      child: const Text('Quay lại'),
+                      child: Text(l.actionBack),
                     ),
                   if (_index > 0) const SizedBox(width: 12),
                   Expanded(
                     child: FilledButton(
                       onPressed: _saving ? null : _next,
-                      child: Text(_index == _pages - 1 ? 'Cho phép Upa nhắc' : 'Tiếp tục'),
+                      child: Text(_index == _pages - 1 ? l.allowReminders : l.actionContinue),
                     ),
                   ),
                 ],
@@ -114,6 +116,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   Widget _welcome(BuildContext context) {
     final t = Theme.of(context).textTheme;
+    final l = context.l10n;
     return Padding(
       padding: const EdgeInsets.all(24),
       child: Column(
@@ -121,13 +124,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         children: [
           const Mascot(mood: Mood.stretch, size: 240),
           const SizedBox(height: 24),
-          Text('Ngồi lâu thì Upa cũng mỏi',
+          Text(l.onbWelcomeTitle,
               textAlign: TextAlign.center,
               style: t.headlineSmall?.copyWith(fontWeight: FontWeight.w800)),
           const SizedBox(height: 12),
           Text(
-            'Upa sẽ nhắc bạn đứng dậy, giãn cơ 1 phút ngay tại bàn.\n'
-            'Lỡ một lần cũng không sao, Upa không bao giờ trách.',
+            l.onbWelcomeBody,
             textAlign: TextAlign.center,
             style: t.bodyLarge,
           ),
@@ -139,6 +141,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   /// Giải thích trước, rồi mới hiện hộp thoại xin quyền của hệ điều hành (khi bấm nút cuối).
   Widget _permission(BuildContext context) {
     final t = Theme.of(context).textTheme;
+    final l = context.l10n;
     return Padding(
       padding: const EdgeInsets.all(24),
       child: Column(
@@ -146,19 +149,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         children: [
           const UpaRig(state: 'bell', size: 240),
           const SizedBox(height: 24),
-          Text('Cho Upa nhắc bạn nhé?',
+          Text(l.onbPermissionTitle,
               textAlign: TextAlign.center,
               style: t.headlineSmall?.copyWith(fontWeight: FontWeight.w800)),
           const SizedBox(height: 12),
           Text(
-            'Upa chỉ lắc chuông trong giờ làm, khi bạn đã ngồi lâu - không spam, không quảng cáo.\n'
-            'Bước tiếp theo điện thoại sẽ hỏi quyền gửi thông báo.',
+            l.onbPermissionBody,
             textAlign: TextAlign.center,
             style: t.bodyLarge,
           ),
           const SizedBox(height: 8),
           Text(
-            'Không cho phép cũng không sao, bạn vẫn dùng app và bật lại sau trong Cài đặt.',
+            l.onbPermissionNote,
             textAlign: TextAlign.center,
             style: t.bodySmall?.copyWith(color: Colors.brown.shade400),
           ),
@@ -167,61 +169,67 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
   }
 
-  Widget _schedule(BuildContext context) => ListView(
+  Widget _schedule(BuildContext context) {
+    final l = context.l10n;
+    return ListView(
         padding: const EdgeInsets.all(24),
         children: [
-          Text('Bạn làm việc lúc nào?',
+          Text(l.onbScheduleTitle,
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w800)),
           const SizedBox(height: 4),
-          const Text('Upa chỉ nhắc trong giờ làm, không làm phiền buổi tối.'),
-          const SectionTitle('Giờ làm việc'),
+          Text(l.onbScheduleSubtitle),
+          SectionTitle(l.sectionWorkHours),
           TimeRangeTile(
-            label: 'Vào làm – tan làm',
+            label: l.workStartEnd,
             start: _s.workStart,
             end: _s.workEnd,
             onChanged: (a, b) => setState(() => _s = _s.copyWith(workStart: a, workEnd: b)),
           ),
-          const SectionTitle('Nghỉ trưa'),
+          SectionTitle(l.sectionLunch),
           Card(
             child: SwitchListTile(
-              title: const Text('Không nhắc giờ nghỉ trưa'),
+              title: Text(l.noRemindLunch),
               value: _s.lunchEnabled,
               onChanged: (v) => setState(() => _s = _s.copyWith(lunchEnabled: v)),
             ),
           ),
           const SizedBox(height: 8),
           TimeRangeTile(
-            label: 'Giờ nghỉ trưa',
+            label: l.lunchTime,
             start: _s.lunchStart,
             end: _s.lunchEnd,
             enabled: _s.lunchEnabled,
             onChanged: (a, b) => setState(() => _s = _s.copyWith(lunchStart: a, lunchEnd: b)),
           ),
-          const SectionTitle('Ngày làm việc'),
+          SectionTitle(l.sectionWorkDays),
           WorkDaysPicker(
             days: _s.workDays,
             onChanged: (d) => setState(() => _s = _s.copyWith(workDays: d)),
           ),
         ],
       );
+  }
 
-  Widget _style(BuildContext context) => ListView(
+  Widget _style(BuildContext context) {
+    final l = context.l10n;
+    return ListView(
         padding: const EdgeInsets.all(24),
         children: [
-          Text('Upa nhắc kiểu nào?',
+          Text(l.onbStyleTitle,
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w800)),
           const SizedBox(height: 12),
           ModePicker(mode: _s.mode, onChanged: (m) => setState(() => _s = _s.copyWith(mode: m))),
-          const SectionTitle('Bạn hay mỏi ở đâu?'),
+          SectionTitle(l.sectionFocusAreas),
           AreaPicker(
             areas: _s.focusAreas,
             onChanged: (a) => setState(() => _s = _s.copyWith(focusAreas: a)),
           ),
           const SizedBox(height: 16),
           Text(
-            'Mục tiêu: ${_s.dailyGoal} lần giãn cơ mỗi ngày.',
+            l.dailyGoalLine(_s.dailyGoal),
             style: const TextStyle(fontWeight: FontWeight.w600),
           ),
         ],
       );
+  }
 }

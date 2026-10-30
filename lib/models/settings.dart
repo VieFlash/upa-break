@@ -10,33 +10,12 @@ extension ReminderModeX on ReminderMode {
         ReminderMode.smart => 60,
         ReminderMode.focus => 45,
       };
-
-  String get label => switch (this) {
-        ReminderMode.gentle => 'Nhẹ nhàng',
-        ReminderMode.smart => 'Thông minh',
-        ReminderMode.focus => 'Chăm chỉ',
-      };
-
-  String get description => switch (this) {
-        ReminderMode.gentle => 'Nhắc mỗi 90 phút, ít làm phiền.',
-        ReminderMode.smart =>
-          'Khoảng 60 phút. Đang làm tốt thì nhắc thưa hơn, bị chậm thì nhắc sớm hơn.',
-        ReminderMode.focus => 'Nhắc đều mỗi 45 phút cho tới khi đạt mục tiêu.',
-      };
 }
 
 enum BodyArea { neck, shoulders, back, wrists, eyes, legs }
 
+/// Tên hiển thị của kiểu nhắc / vùng: xem `L10nLookup` trong lib/l10n/l10n.dart.
 extension BodyAreaX on BodyArea {
-  String get label => switch (this) {
-        BodyArea.neck => 'Cổ',
-        BodyArea.shoulders => 'Vai',
-        BodyArea.back => 'Lưng',
-        BodyArea.wrists => 'Cổ tay',
-        BodyArea.eyes => 'Mắt',
-        BodyArea.legs => 'Chân',
-      };
-
   String get emoji => switch (this) {
         BodyArea.neck => '🦒',
         BodyArea.shoulders => '💪',
@@ -64,6 +43,9 @@ class UserSettings {
   final Set<BodyArea> focusAreas;
   final bool onboarded;
 
+  /// Ngôn ngữ người dùng chọn ('vi' / 'en'); null = theo ngôn ngữ máy.
+  final String? language;
+
   const UserSettings({
     this.workStart = 8 * 60 + 30,
     this.workEnd = 17 * 60 + 30,
@@ -74,6 +56,7 @@ class UserSettings {
     this.mode = ReminderMode.smart,
     this.focusAreas = const {BodyArea.neck, BodyArea.shoulders, BodyArea.back},
     this.onboarded = false,
+    this.language,
   });
 
   int get workMinutes {
@@ -113,6 +96,7 @@ class UserSettings {
     ReminderMode? mode,
     Set<BodyArea>? focusAreas,
     bool? onboarded,
+    Object? language = _keep,
   }) =>
       UserSettings(
         workStart: workStart ?? this.workStart,
@@ -124,6 +108,7 @@ class UserSettings {
         mode: mode ?? this.mode,
         focusAreas: focusAreas ?? this.focusAreas,
         onboarded: onboarded ?? this.onboarded,
+        language: identical(language, _keep) ? this.language : language as String?,
       );
 
   Map<String, dynamic> toJson() => {
@@ -136,6 +121,7 @@ class UserSettings {
         'mode': mode.name,
         'focusAreas': focusAreas.map((a) => a.name).toList(),
         'onboarded': onboarded,
+        if (language != null) 'language': language,
       };
 
   factory UserSettings.fromJson(Map<String, dynamic> j) {
@@ -157,9 +143,13 @@ class UserSettings {
               .toSet() ??
           d.focusAreas,
       onboarded: j['onboarded'] as bool? ?? false,
+      language: j['language'] as String?,
     );
   }
 }
+
+/// Giá trị mặc định của tham số `copyWith(language:)`: phân biệt "giữ nguyên" với "đặt về null (theo máy)".
+const _keep = Object();
 
 int _overlap(int a1, int a2, int b1, int b2) {
   final s = a1 > b1 ? a1 : b1;

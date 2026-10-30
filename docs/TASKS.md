@@ -81,7 +81,7 @@ tool/setup_android.dart
 
 ## Giai đoạn 2 – Hoàn thiện trải nghiệm
 
-### [ ] T2.1 Đa ngôn ngữ (vi, en)
+### [x] T2.1 Đa ngôn ngữ (vi, en)
 - Dùng `flutter_localizations` + `gen-l10n` (`l10n.yaml`, `lib/l10n/app_vi.arb`, `app_en.arb`).
 - Chuyển toàn bộ chuỗi UI, tên/bước bài tập, nội dung thông báo sang ARB.
 - Mặc định theo ngôn ngữ máy, cho phép đổi trong Cài đặt.

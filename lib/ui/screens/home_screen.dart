@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/l10n.dart';
 import '../../models/break_log.dart';
 import '../../models/settings.dart';
 import '../../state/app_state.dart';
@@ -11,29 +12,30 @@ import 'break_screen.dart';
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
-  String _headline(AppState s) => switch (s.mood) {
-        Mood.fresh => 'Upa đang tỉnh táo ✨',
-        Mood.slouch => 'Ngồi ${s.minutesSitting} phút rồi, Upa bắt đầu gù lưng',
-        Mood.sleepy => 'Upa ngủ gục mất rồi… đứng dậy thôi!',
-        Mood.proud => 'Đạt mục tiêu hôm nay rồi! 🎉',
-        Mood.offHours => s.isPaused ? 'Đang họp, Upa im lặng 🤫' : 'Ngoài giờ làm, nghỉ ngơi thôi',
-        Mood.stretch => 'Duỗi người nào!',
+  String _headline(AppLocalizations l, AppState s) => switch (s.mood) {
+        Mood.fresh => l.moodFresh,
+        Mood.slouch => l.moodSlouch(s.minutesSitting),
+        Mood.sleepy => l.moodSleepy,
+        Mood.proud => l.moodProud,
+        Mood.offHours => s.isPaused ? l.moodPaused : l.moodOffHours,
+        Mood.stretch => l.moodStretch,
       };
 
   String _hhmm(DateTime t) => formatMinutes(t.hour * 60 + t.minute);
 
-  String? _nextText(AppState s) {
+  String? _nextText(AppLocalizations l, AppState s) {
     final n = s.nextReminder;
     if (n == null) return null;
     final today = dateOnly(s.now);
     final day = dateOnly(n);
-    if (day == today) return 'Lời nhắc tiếp theo: ${_hhmm(n)}';
-    if (day.difference(today).inDays == 1) return 'Lời nhắc tiếp theo: ${_hhmm(n)} ngày mai';
-    return 'Lời nhắc tiếp theo: ${_hhmm(n)} ngày ${n.day}/${n.month}';
+    if (day == today) return l.nextReminderToday(_hhmm(n));
+    if (day.difference(today).inDays == 1) return l.nextReminderTomorrow(_hhmm(n));
+    return l.nextReminderDate(_hhmm(n), n.day, n.month);
   }
 
   Future<void> _showPauseSheet(BuildContext context) async {
     final state = AppScope.read(context);
+    final l = context.l10n;
     final choice = await showModalBottomSheet<Duration?>(
       context: context,
       showDragHandle: true,
@@ -41,15 +43,14 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Padding(
-              padding: EdgeInsets.only(bottom: 8),
-              child: Text('Tạm dừng nhắc trong…',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Text(l.pauseSheetTitle, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
             ),
-            for (final (label, d) in const [
-              ('30 phút', Duration(minutes: 30)),
-              ('1 tiếng', Duration(hours: 1)),
-              ('2 tiếng', Duration(hours: 2)),
+            for (final (label, d) in [
+              (l.pause30m, const Duration(minutes: 30)),
+              (l.pause1h, const Duration(hours: 1)),
+              (l.pause2h, const Duration(hours: 2)),
             ])
               ListTile(
                 leading: const Icon(Icons.timer_outlined),
@@ -58,7 +59,7 @@ class HomeScreen extends StatelessWidget {
               ),
             ListTile(
               leading: const Icon(Icons.nights_stay_outlined),
-              title: const Text('Hết hôm nay'),
+              title: Text(l.pauseRestOfDay),
               onTap: () => Navigator.pop(ctx, Duration.zero),
             ),
           ],
@@ -72,8 +73,9 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final s = AppScope.of(context);
+    final l = context.l10n;
     final t = Theme.of(context).textTheme;
-    final next = _nextText(s);
+    final next = _nextText(l, s);
 
     return Scaffold(
       body: SafeArea(
@@ -82,7 +84,7 @@ class HomeScreen extends StatelessWidget {
           children: [
             Row(
               children: [
-                Text('Hôm nay', style: t.headlineMedium?.copyWith(fontWeight: FontWeight.w800)),
+                Text(l.tabToday, style: t.headlineMedium?.copyWith(fontWeight: FontWeight.w800)),
                 const Spacer(),
                 _Pill(text: '🐟 ${s.fish}'),
                 const SizedBox(width: 8),
@@ -91,7 +93,7 @@ class HomeScreen extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Center(child: Mascot(mood: s.mood, size: 240)),
-            Text(_headline(s),
+            Text(_headline(l, s),
                 textAlign: TextAlign.center,
                 style: t.titleLarge?.copyWith(fontWeight: FontWeight.w700)),
             const SizedBox(height: 20),
@@ -109,7 +111,7 @@ class HomeScreen extends StatelessWidget {
                       children: [
                         Text('${s.todayCount}',
                             style: t.headlineMedium?.copyWith(fontWeight: FontWeight.w800)),
-                        Text(' / ${s.dailyGoal} lần giãn cơ', style: t.titleMedium),
+                        Text(l.breaksOfGoal(s.dailyGoal), style: t.titleMedium),
                       ],
                     ),
                     const SizedBox(height: 10),
@@ -135,8 +137,8 @@ class HomeScreen extends StatelessWidget {
                 color: const Color(0xFFE8EEFF),
                 child: ListTile(
                   leading: const Icon(Icons.do_not_disturb_on_outlined, color: AppColors.blue),
-                  title: Text('Tạm dừng tới ${_hhmm(s.pausedUntil!)}'),
-                  trailing: TextButton(onPressed: s.resume, child: const Text('Tiếp tục')),
+                  title: Text(l.pausedUntil(_hhmm(s.pausedUntil!))),
+                  trailing: TextButton(onPressed: s.resume, child: Text(l.actionResume)),
                 ),
               ),
             ],
@@ -144,14 +146,14 @@ class HomeScreen extends StatelessWidget {
             FilledButton.icon(
               onPressed: () => openQuickBreak(Navigator.of(context), s),
               icon: const Icon(Icons.self_improvement),
-              label: const Text('Giãn cơ ngay · 1 phút'),
+              label: Text(l.stretchNow),
             ),
             const SizedBox(height: 10),
             if (!s.isPaused)
               OutlinedButton.icon(
                 onPressed: () => _showPauseSheet(context),
                 icon: const Icon(Icons.groups_outlined),
-                label: const Text('Đang họp'),
+                label: Text(l.inMeeting),
               ),
           ],
         ),

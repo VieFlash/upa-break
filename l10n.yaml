@@ -1,0 +1,7 @@
+# Đa ngôn ngữ: chuỗi trong lib/l10n/app_<lang>.arb (tiếng Việt là bản gốc), sinh AppLocalizations bằng
+# `fvm flutter gen-l10n` (cũng tự chạy khi build/pub get).
+arb-dir: lib/l10n
+template-arb-file: app_vi.arb
+output-localization-file: app_localizations.dart
+output-class: AppLocalizations
+nullable-getter: false

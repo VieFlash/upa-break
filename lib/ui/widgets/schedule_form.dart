@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/l10n.dart';
 import '../../models/settings.dart';
 
 /// Các khối nhập liệu dùng chung cho Onboarding và Cài đặt.
-
-const _weekdayLabels = {1: 'T2', 2: 'T3', 3: 'T4', 4: 'T5', 5: 'T6', 6: 'T7', 7: 'CN'};
 
 Future<int?> pickMinutes(BuildContext context, int current) async {
   final picked = await showTimePicker(
@@ -84,13 +83,13 @@ class WorkDaysPicker extends StatelessWidget {
         spacing: 8,
         runSpacing: 8,
         children: [
-          for (final e in _weekdayLabels.entries)
+          for (var wd = 1; wd <= 7; wd++)
             FilterChip(
-              label: Text(e.value),
-              selected: days.contains(e.key),
+              label: Text(context.l10n.weekdayShort(wd)),
+              selected: days.contains(wd),
               onSelected: (on) {
                 final next = {...days};
-                on ? next.add(e.key) : next.remove(e.key);
+                on ? next.add(wd) : next.remove(wd);
                 if (next.isNotEmpty) onChanged(next);
               },
             ),
@@ -117,8 +116,8 @@ class ModePicker extends StatelessWidget {
                     m == mode ? Icons.radio_button_checked : Icons.radio_button_off,
                     color: Theme.of(context).colorScheme.primary,
                   ),
-                  title: Text(m.label, style: const TextStyle(fontWeight: FontWeight.w700)),
-                  subtitle: Text(m.description),
+                  title: Text(context.l10n.modeLabel(m), style: const TextStyle(fontWeight: FontWeight.w700)),
+                  subtitle: Text(context.l10n.modeDescription(m)),
                 ),
               ),
             ),
@@ -138,7 +137,7 @@ class AreaPicker extends StatelessWidget {
         children: [
           for (final a in BodyArea.values)
             FilterChip(
-              label: Text('${a.emoji} ${a.label}'),
+              label: Text('${a.emoji} ${context.l10n.areaLabel(a)}'),
               selected: areas.contains(a),
               onSelected: (on) {
                 final next = {...areas};

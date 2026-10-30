@@ -1,6 +1,9 @@
+import 'dart:ui' show PlatformDispatcher;
+
 import 'package:flutter/widgets.dart';
 
 import '../data/storage.dart';
+import '../logic/language.dart';
 import '../logic/reminder_planner.dart';
 import '../logic/streak.dart';
 import '../models/break_log.dart';
@@ -37,6 +40,12 @@ class AppState extends ChangeNotifier {
   /// Đã biết chắc là người dùng tắt/từ chối thông báo (null = chưa kiểm tra được).
   bool get notificationsBlocked => _notificationsAllowed == false;
   DateTime get now => clock();
+
+  /// Ngôn ngữ đang dùng: người dùng chọn, nếu không thì theo máy (máy dùng ngôn ngữ khác vi/en thì tiếng Anh).
+  String get language => resolveLanguage(_settings.language, deviceLanguage());
+
+  /// Ngôn ngữ của máy (thay được trong test).
+  String Function() deviceLanguage = () => PlatformDispatcher.instance.locale.languageCode;
 
   // ---------- Số liệu ----------
 
@@ -198,6 +207,7 @@ class AppState extends ChangeNotifier {
     final times = plannedReminders();
     _nextReminder = times.isEmpty ? null : times.first;
     try {
+      await notifications.setLanguage(language);
       await notifications.scheduleAll(times);
     } catch (e) {
       debugPrint('Không lên lịch được thông báo: $e');

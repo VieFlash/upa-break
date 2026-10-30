@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:upa_break/data/storage.dart';
+import 'package:upa_break/l10n/l10n.dart';
 import 'package:upa_break/services/notification_service.dart';
 import 'package:upa_break/state/app_state.dart';
 import 'package:upa_break/ui/screens/home_screen.dart';
@@ -19,6 +20,9 @@ class _FakeNotifications extends NotificationService {
 
   @override
   Future<void> scheduleAll(List<DateTime> times) async {}
+
+  @override
+  Future<void> setLanguage(String language) async {}
 }
 
 void main() {
@@ -32,7 +36,15 @@ void main() {
     SharedPreferences.setMockInitialValues({});
     final state = AppState(await Storage.open(), _FakeNotifications(allowed));
     await state.refreshPermission();
-    await tester.pumpWidget(AppScope(state: state, child: const MaterialApp(home: HomeScreen())));
+    await tester.pumpWidget(AppScope(
+      state: state,
+      child: const MaterialApp(
+        locale: Locale('vi'),
+        supportedLocales: AppLocalizations.supportedLocales,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        home: HomeScreen(),
+      ),
+    ));
     await tester.pump();
     return state;
   }

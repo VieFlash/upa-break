@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import 'l10n/l10n.dart';
 import 'state/app_state.dart';
 import 'ui/screens/break_screen.dart';
 import 'ui/screens/history_screen.dart';
@@ -45,6 +46,10 @@ class _UpaBreakAppState extends State<UpaBreakApp> with WidgetsBindingObserver {
     super.dispose();
   }
 
+  /// Đổi ngôn ngữ máy khi app đang mở: cập nhật UI + ngôn ngữ thông báo.
+  @override
+  void didChangeLocales(List<Locale>? locales) => widget.state.refresh();
+
   @override
   void didChangeAppLifecycleState(AppLifecycleState s) {
     if (s == AppLifecycleState.resumed) widget.state.refresh();
@@ -54,12 +59,19 @@ class _UpaBreakAppState extends State<UpaBreakApp> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     return AppScope(
       state: widget.state,
-      child: MaterialApp(
-        title: 'Upa Break',
-        debugShowCheckedModeBanner: false,
-        navigatorKey: navigatorKey,
-        theme: buildTheme(),
-        home: const _Root(),
+      child: ListenableBuilder(
+        listenable: widget.state,
+        builder: (context, _) => MaterialApp(
+          onGenerateTitle: (context) => context.l10n.appTitle,
+          debugShowCheckedModeBanner: false,
+          navigatorKey: navigatorKey,
+          theme: buildTheme(),
+          // Ngôn ngữ: người dùng chọn trong Cài đặt, mặc định theo máy (ngoài vi/en thì tiếng Anh).
+          locale: Locale(widget.state.language),
+          supportedLocales: AppLocalizations.supportedLocales,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          home: const _Root(),
+        ),
       ),
     );
   }
@@ -92,17 +104,23 @@ class _MainShellState extends State<MainShell> {
 
   @override
   Widget build(BuildContext context) {
+    final l = context.l10n;
     return Scaffold(
       body: IndexedStack(index: _tab, children: _screens),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _tab,
         onDestinationSelected: (i) => setState(() => _tab = i),
-        destinations: const [
-          NavigationDestination(icon: Icon(Icons.pets_outlined), selectedIcon: Icon(Icons.pets), label: 'Hôm nay'),
+        destinations: [
           NavigationDestination(
-              icon: Icon(Icons.self_improvement_outlined), selectedIcon: Icon(Icons.self_improvement), label: 'Bài tập'),
-          NavigationDestination(icon: Icon(Icons.bar_chart_outlined), selectedIcon: Icon(Icons.bar_chart), label: 'Nhật ký'),
-          NavigationDestination(icon: Icon(Icons.tune_outlined), selectedIcon: Icon(Icons.tune), label: 'Cài đặt'),
+              icon: const Icon(Icons.pets_outlined), selectedIcon: const Icon(Icons.pets), label: l.tabToday),
+          NavigationDestination(
+              icon: const Icon(Icons.self_improvement_outlined),
+              selectedIcon: const Icon(Icons.self_improvement),
+              label: l.tabLibrary),
+          NavigationDestination(
+              icon: const Icon(Icons.bar_chart_outlined), selectedIcon: const Icon(Icons.bar_chart), label: l.tabHistory),
+          NavigationDestination(
+              icon: const Icon(Icons.tune_outlined), selectedIcon: const Icon(Icons.tune), label: l.tabSettings),
         ],
       ),
     );

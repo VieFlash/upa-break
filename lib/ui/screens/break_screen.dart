@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../data/exercises.dart';
+import '../../l10n/l10n.dart';
 import '../../models/exercise.dart';
 import '../../models/settings.dart';
 import '../../state/app_state.dart';
@@ -122,7 +123,7 @@ class _BreakScreenState extends State<BreakScreen> {
           leading: IconButton(icon: const Icon(Icons.close), onPressed: _exit),
           title: _phase == _Phase.done
               ? null
-              : Text('Bài ${_current + 1}/${widget.exercises.length}'),
+              : Text(context.l10n.exerciseProgress(_current + 1, widget.exercises.length)),
           centerTitle: true,
         ),
         body: SafeArea(
@@ -134,21 +135,22 @@ class _BreakScreenState extends State<BreakScreen> {
 
   Widget _exerciseView(BuildContext context) {
     final t = Theme.of(context).textTheme;
+    final l = context.l10n;
+    final steps = l.exerciseSteps(_ex.id);
     final ready = _phase == _Phase.ready;
     final total = ready ? _readySeconds : _ex.seconds;
     final progress = 1 - _remaining / total;
     final stepIndex = ready
         ? 0
-        : ((_ex.seconds - _remaining) * _ex.steps.length ~/ _ex.seconds)
-            .clamp(0, _ex.steps.length - 1);
+        : ((_ex.seconds - _remaining) * steps.length ~/ _ex.seconds).clamp(0, steps.length - 1);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Column(
         children: [
-          Chip(label: Text('${_ex.area.emoji} ${_ex.area.label}')),
+          Chip(label: Text('${_ex.area.emoji} ${l.areaLabel(_ex.area)}')),
           const SizedBox(height: 4),
-          Text(_ex.name, style: t.headlineSmall?.copyWith(fontWeight: FontWeight.w800)),
+          Text(l.exerciseName(_ex.id), style: t.headlineSmall?.copyWith(fontWeight: FontWeight.w800)),
           const Spacer(),
           Stack(
             alignment: Alignment.center,
@@ -168,14 +170,14 @@ class _BreakScreenState extends State<BreakScreen> {
           ),
           const SizedBox(height: 16),
           Text(
-            ready ? 'Chuẩn bị… $_remaining' : '$_remaining giây',
+            ready ? l.getReady(_remaining) : l.secondsLeft(_remaining),
             style: t.displaySmall?.copyWith(fontWeight: FontWeight.w800),
           ),
           const SizedBox(height: 16),
           AnimatedSwitcher(
             duration: const Duration(milliseconds: 300),
             child: Text(
-              _ex.steps[stepIndex],
+              steps[stepIndex],
               key: ValueKey('$_current-$stepIndex'),
               textAlign: TextAlign.center,
               style: t.titleMedium,
@@ -188,7 +190,7 @@ class _BreakScreenState extends State<BreakScreen> {
                 child: OutlinedButton.icon(
                   onPressed: () => setState(() => _paused = !_paused),
                   icon: Icon(_paused ? Icons.play_arrow : Icons.pause),
-                  label: Text(_paused ? 'Tiếp tục' : 'Tạm dừng'),
+                  label: Text(_paused ? l.actionContinue : l.actionPause),
                 ),
               ),
               const SizedBox(width: 12),
@@ -196,7 +198,7 @@ class _BreakScreenState extends State<BreakScreen> {
                 child: OutlinedButton.icon(
                   onPressed: _skip,
                   icon: const Icon(Icons.skip_next),
-                  label: const Text('Bỏ qua'),
+                  label: Text(l.actionSkip),
                 ),
               ),
             ],
@@ -209,6 +211,7 @@ class _BreakScreenState extends State<BreakScreen> {
 
   Widget _doneView(BuildContext context) {
     final t = Theme.of(context).textTheme;
+    final l = context.l10n;
     final state = AppScope.of(context);
     final nothing = _completed == 0;
     return Padding(
@@ -219,23 +222,23 @@ class _BreakScreenState extends State<BreakScreen> {
           Mascot(mood: nothing ? Mood.fresh : Mood.proud, size: 240),
           const SizedBox(height: 16),
           Text(
-            nothing ? 'Lần sau mình tập nhé!' : 'Giỏi quá! Upa duỗi người xong rồi',
+            nothing ? l.doneNothing : l.doneGreat,
             textAlign: TextAlign.center,
             style: t.headlineSmall?.copyWith(fontWeight: FontWeight.w800),
           ),
           const SizedBox(height: 12),
           if (!nothing) ...[
-            Text('+$_reward 🐟 cá khô', style: t.titleLarge),
+            Text(l.fishReward(_reward), style: t.titleLarge),
             const SizedBox(height: 8),
-            Text('Hôm nay: ${state.todayCount}/${state.dailyGoal} lần'
-                '${state.streak > 0 ? ' · 🔥 ${state.streak} ngày' : ''}'),
+            Text(l.todayProgress(state.todayCount, state.dailyGoal) +
+                (state.streak > 0 ? l.streakSuffix(state.streak) : '')),
             if (state.goalReachedToday) ...[
               const SizedBox(height: 8),
-              const Text('🎉 Đạt mục tiêu hôm nay! Upa sẽ thôi nhắc tới ngày mai.'),
+              Text(l.goalReachedNote, textAlign: TextAlign.center),
             ],
           ],
           const Spacer(),
-          FilledButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Xong')),
+          FilledButton(onPressed: () => Navigator.of(context).pop(), child: Text(l.actionDone)),
           const SizedBox(height: 8),
         ],
       ),

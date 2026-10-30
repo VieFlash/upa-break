@@ -5,17 +5,19 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest_all.dart' as tzdata;
 import 'package:timezone/timezone.dart' as tz;
 
+import '../l10n/l10n.dart';
 import '../logic/reminder_planner.dart';
 
 /// Người dùng bấm một action không mở app (vd "Để sau 15'") khi app đang tắt/chạy nền:
-/// plugin chạy hàm này trên một background isolate riêng.
+/// plugin chạy hàm này trên một background isolate riêng. Ngôn ngữ lấy từ payload của thông báo.
 @pragma('vm:entry-point')
 Future<void> onBackgroundNotificationResponse(NotificationResponse response) async {
   if (response.actionId != NotificationService.actionSnooze) return;
   WidgetsFlutterBinding.ensureInitialized();
+  final l = l10nFor(NotificationService._languageOf(response.payload));
   final plugin = FlutterLocalNotificationsPlugin();
-  await plugin.initialize(NotificationService._initSettings);
-  await NotificationService._scheduleSnooze(plugin);
+  await plugin.initialize(NotificationService._initSettings(l));
+  await NotificationService._scheduleSnooze(plugin, l);
 }
 
 /// Lên lịch thông báo nhắc giãn cơ (local notifications, không cần server).
@@ -25,6 +27,7 @@ class NotificationService {
   /// Gọi khi người dùng chạm vào thông báo lúc app đang chạy hoặc chạy nền.
   final void Function() onTapBreak;
 
+  /// Payload `break:<ngôn ngữ>`: mở phiên giãn cơ; ngôn ngữ để isolate nền viết lời nhắc lại.
   static const _payloadBreak = 'break';
   static const _baseId = 1000;
   static const _testId = 1;
@@ -37,59 +40,59 @@ class NotificationService {
   static const _category = 'break_reminder';
 
   final _plugin = FlutterLocalNotificationsPlugin();
+  String _language = 'vi';
+  late AppLocalizations _l = l10nFor(_language);
 
-  static const _android = AndroidNotificationDetails(
-    'break_reminders',
-    'Nhắc giãn cơ',
-    channelDescription: 'Lời nhắc đứng dậy, giãn cơ trong giờ làm việc',
-    importance: Importance.high,
-    priority: Priority.high,
-    category: AndroidNotificationCategory.reminder,
-    actions: [
-      AndroidNotificationAction(actionStart, 'Bắt đầu', showsUserInterface: true),
-      AndroidNotificationAction(actionSnooze, "Để sau ${ReminderPlanner.snoozeMinutes}'"),
-    ],
-  );
-  static const _details = NotificationDetails(
-    android: _android,
-    iOS: DarwinNotificationDetails(categoryIdentifier: _category),
-  );
+  static String _payload(AppLocalizations l) => '$_payloadBreak:${l.localeName}';
+  static bool _isBreak(String? payload) => payload?.startsWith(_payloadBreak) ?? false;
+  static String _languageOf(String? payload) {
+    final parts = payload?.split(':') ?? const [];
+    return parts.length > 1 ? parts[1] : 'vi';
+  }
 
-  static final _initSettings = InitializationSettings(
-    android: const AndroidInitializationSettings('@mipmap/ic_launcher'),
-    iOS: DarwinInitializationSettings(
-      requestAlertPermission: false,
-      requestBadgePermission: false,
-      requestSoundPermission: false,
-      notificationCategories: [
-        DarwinNotificationCategory(_category, actions: [
-          DarwinNotificationAction.plain(actionStart, 'Bắt đầu',
-              options: {DarwinNotificationActionOption.foreground}),
-          DarwinNotificationAction.plain(actionSnooze, "Để sau ${ReminderPlanner.snoozeMinutes}'"),
-        ]),
-      ],
-    ),
-  );
+  static NotificationDetails _details(AppLocalizations l) => NotificationDetails(
+        android: AndroidNotificationDetails(
+          'break_reminders',
+          l.notifChannelName,
+          channelDescription: l.notifChannelDesc,
+          importance: Importance.high,
+          priority: Priority.high,
+          category: AndroidNotificationCategory.reminder,
+          actions: [
+            AndroidNotificationAction(actionStart, l.notifActionStart, showsUserInterface: true),
+            AndroidNotificationAction(actionSnooze, l.notifActionSnooze(ReminderPlanner.snoozeMinutes)),
+          ],
+        ),
+        iOS: const DarwinNotificationDetails(categoryIdentifier: _category),
+      );
 
-  /// Lời nhắc theo giọng Upa, xoay vòng.
-  static const _messages = [
-    ('Upa gù lưng rồi', 'Đứng dậy duỗi người 1 phút cùng mình nhé.'),
-    ('Cổ mỏi chưa?', 'Nghiêng cổ vài nhịp là đỡ ngay.'),
-    ('Ngồi lâu rồi đó', 'Upa bắt đầu ngáp… mình giãn cơ chút nha.'),
-    ('Giờ nghỉ 60 giây!', 'Xoay vai, hít sâu, rồi làm tiếp.'),
-    ('Mắt cần nghỉ 👀', 'Nhìn ra xa 20 giây, Upa đếm cho.'),
-    ('Upa đợi bạn nè', 'Một bài nhỏ thôi, ngồi tại chỗ cũng làm được.'),
-  ];
+  static InitializationSettings _initSettings(AppLocalizations l) => InitializationSettings(
+        android: const AndroidInitializationSettings('@mipmap/ic_launcher'),
+        iOS: DarwinInitializationSettings(
+          requestAlertPermission: false,
+          requestBadgePermission: false,
+          requestSoundPermission: false,
+          notificationCategories: [
+            DarwinNotificationCategory(_category, actions: [
+              DarwinNotificationAction.plain(actionStart, l.notifActionStart,
+                  options: {DarwinNotificationActionOption.foreground}),
+              DarwinNotificationAction.plain(actionSnooze, l.notifActionSnooze(ReminderPlanner.snoozeMinutes)),
+            ]),
+          ],
+        ),
+      );
 
-  Future<void> init() async {
+  Future<void> init(String language) async {
     tzdata.initializeTimeZones();
+    _language = language;
+    _l = l10nFor(language);
     await _plugin.initialize(
-      _initSettings,
+      _initSettings(_l),
       onDidReceiveNotificationResponse: (resp) {
         // "Để sau" khi app đang mở: hẹn lại, không mở màn giãn cơ.
         if (resp.actionId == actionSnooze) {
-          _scheduleSnooze(_plugin);
-        } else if (resp.payload == _payloadBreak) {
+          _scheduleSnooze(_plugin, _l);
+        } else if (_isBreak(resp.payload)) {
           onTapBreak();
         }
       },
@@ -97,24 +100,29 @@ class NotificationService {
     );
   }
 
-  static Future<void> _scheduleSnooze(FlutterLocalNotificationsPlugin plugin) async {
+  /// Đổi ngôn ngữ thông báo; khởi tạo lại để iOS nhận tên nút action mới.
+  Future<void> setLanguage(String language) async {
+    if (language == _language) return;
+    await init(language);
+  }
+
+  static Future<void> _scheduleSnooze(FlutterLocalNotificationsPlugin plugin, AppLocalizations l) async {
     tzdata.initializeTimeZones();
     await plugin.zonedSchedule(
       _snoozeId,
-      'Upa nhắc lại nè ⏰',
-      'Đã ${ReminderPlanner.snoozeMinutes} phút rồi, đứng dậy duỗi người 1 phút nhé.',
+      l.notifSnoozeTitle,
+      l.notifSnoozeBody(ReminderPlanner.snoozeMinutes),
       tz.TZDateTime.from(ReminderPlanner.snoozeAt(DateTime.now()), tz.UTC),
-      _details,
+      _details(l),
       androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
-      payload: _payloadBreak,
+      payload: _payload(l),
     );
   }
 
   /// App được mở bằng cách chạm vào thông báo (khi app đã bị tắt).
   Future<bool> launchedFromNotification() async {
     final details = await _plugin.getNotificationAppLaunchDetails();
-    return (details?.didNotificationLaunchApp ?? false) &&
-        details?.notificationResponse?.payload == _payloadBreak;
+    return (details?.didNotificationLaunchApp ?? false) && _isBreak(details?.notificationResponse?.payload);
   }
 
   Future<bool> requestPermission() async {
@@ -137,8 +145,9 @@ class NotificationService {
     for (final p in await _plugin.pendingNotificationRequests()) {
       if (p.id >= _baseId) await _plugin.cancel(p.id);
     }
+    final messages = _l.reminderMessages;
     for (var i = 0; i < times.length; i++) {
-      final (title, body) = _messages[(times[i].hour + times[i].minute + i) % _messages.length];
+      final (title, body) = messages[(times[i].hour + times[i].minute + i) % messages.length];
       // Dùng UTC với đúng thời điểm tuyệt đối => không cần biết tên múi giờ của máy.
       final when = tz.TZDateTime.from(times[i], tz.UTC);
       await _plugin.zonedSchedule(
@@ -146,20 +155,20 @@ class NotificationService {
         title,
         body,
         when,
-        _details,
+        _details(_l),
         // Không xin quyền báo thức chính xác: lệch vài phút vẫn ổn cho lời nhắc giãn cơ.
         androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
-        payload: _payloadBreak,
+        payload: _payload(_l),
       );
     }
   }
 
   Future<void> showTest() => _plugin.show(
         _testId,
-        'Upa chào bạn 👋',
-        'Thông báo hoạt động tốt. Chạm để thử một bài giãn cơ.',
-        _details,
-        payload: _payloadBreak,
+        _l.notifTestTitle,
+        _l.notifTestBody,
+        _details(_l),
+        payload: _payload(_l),
       );
 
   /// Hẹn một thông báo thử sau [delay] (màn debug) - kiểm tra lịch hoạt động khi app bị tắt.
@@ -167,12 +176,12 @@ class NotificationService {
     final at = DateTime.now().add(delay);
     await _plugin.zonedSchedule(
       _testScheduledId,
-      'Upa nhắc thử ⏰',
-      'Lời nhắc hẹn giờ hoạt động tốt. Chạm để giãn cơ.',
+      _l.notifTestScheduledTitle,
+      _l.notifTestScheduledBody,
       tz.TZDateTime.from(at, tz.UTC),
-      _details,
+      _details(_l),
       androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
-      payload: _payloadBreak,
+      payload: _payload(_l),
     );
     return at;
   }

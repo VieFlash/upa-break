@@ -48,11 +48,13 @@ lib/
   main.dart                     Khởi tạo storage, notification, state
   app.dart                      MaterialApp, điều hướng, tab bar, vòng đời app
   models/                       UserSettings, BreakLog, Exercise
-  data/exercises.dart           18 bài giãn cơ + chọn phiên nhanh 2 bài
+  data/exercises.dart           18 bài giãn cơ (id, vùng, thời lượng) + chọn phiên nhanh 2 bài
+  l10n/                         Chuỗi hiển thị: app_vi.arb (gốc), app_en.arb; l10n.dart = tra tên bài/vùng/kiểu nhắc
   data/storage.dart             Lưu local bằng shared_preferences
   logic/reminder_planner.dart   Tính các mốc nhắc (hàm thuần, có test)
   logic/streak.dart             Streak + khiên streak (hàm thuần, có test)
-  logic/battery_guide.dart      Nhận diện hãng máy + hướng dẫn tắt tối ưu pin (hàm thuần, có test)
+  logic/battery_guide.dart      Nhận diện hãng máy để hiện hướng dẫn tắt tối ưu pin (hàm thuần, có test)
+  logic/language.dart           Chọn ngôn ngữ: người dùng chọn > ngôn ngữ máy > tiếng Anh (có test)
   services/notification_service.dart  Lên lịch local notification
   services/system_settings.dart       Mở cài đặt thông báo / tối ưu pin / ứng dụng (Android + iOS)
   state/app_state.dart          ChangeNotifier: trạng thái Upa, số liệu, hành động
@@ -97,3 +99,12 @@ git checkout ios/Runner/Info.plist ios/Runner.xcodeproj/project.pbxproj   # 2 to
 Icon iOS dùng `icon_full.png` (không alpha). Android adaptive icon: nền gradient + mặt Upa nằm trong vùng an toàn 66dp
 (+ monochrome cho themed icon Android 13+). Splash: nền kem `#FFF8F0`, mặt Upa ở giữa (Android 12+ dùng ảnh riêng
 vừa vòng tròn 2/3). Simulator iOS hay giữ ảnh khởi động cũ: khởi động lại simulator nếu splash vẫn trắng.
+
+## Đa ngôn ngữ (vi, en)
+
+- Mọi chuỗi hiển thị nằm trong `lib/l10n/app_vi.arb` (bản gốc) và `app_en.arb`; không hard-code trong `lib/ui`.
+  Thêm/sửa chuỗi: sửa cả 2 file ARB rồi `fvm flutter gen-l10n` (cũng tự chạy khi build).
+- Tên + các bước bài tập: key `ex<Id>Name` / `ex<Id>Steps` (mỗi bước một dòng); thêm bài mới thì thêm vào
+  `exerciseName`/`exerciseSteps` trong `lib/l10n/l10n.dart` (test `l10n_test.dart` sẽ báo nếu quên).
+- Ngôn ngữ mặc định theo máy (máy dùng ngôn ngữ khác thì tiếng Anh); đổi trong Cài đặt → Ngôn ngữ.
+  Thông báo đã hẹn được đặt lại theo ngôn ngữ mới; nút "Để sau" chạy nền lấy ngôn ngữ từ payload `break:<lang>`.

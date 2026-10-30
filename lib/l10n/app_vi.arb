@@ -1,0 +1,355 @@
+{
+  "@@locale": "vi",
+  "appTitle": "Upa Break",
+  "tabToday": "Hôm nay",
+  "tabLibrary": "Bài tập",
+  "tabHistory": "Nhật ký",
+  "tabSettings": "Cài đặt",
+  "actionContinue": "Tiếp tục",
+  "actionResume": "Tiếp tục",
+  "actionBack": "Quay lại",
+  "actionDone": "Xong",
+  "actionPause": "Tạm dừng",
+  "actionSkip": "Bỏ qua",
+  "actionEnable": "Bật",
+  "actionRefresh": "Làm mới",
+  "modeGentle": "Nhẹ nhàng",
+  "modeGentleDesc": "Nhắc mỗi 90 phút, ít làm phiền.",
+  "modeSmart": "Thông minh",
+  "modeSmartDesc": "Khoảng 60 phút. Đang làm tốt thì nhắc thưa hơn, bị chậm thì nhắc sớm hơn.",
+  "modeFocus": "Chăm chỉ",
+  "modeFocusDesc": "Nhắc đều mỗi 45 phút cho tới khi đạt mục tiêu.",
+  "areaNeck": "Cổ",
+  "areaShoulders": "Vai",
+  "areaBack": "Lưng",
+  "areaWrists": "Cổ tay",
+  "areaEyes": "Mắt",
+  "areaLegs": "Chân",
+  "weekdayMon": "T2",
+  "weekdayTue": "T3",
+  "weekdayWed": "T4",
+  "weekdayThu": "T5",
+  "weekdayFri": "T6",
+  "weekdaySat": "T7",
+  "weekdaySun": "CN",
+  "moodFresh": "Upa đang tỉnh táo ✨",
+  "moodSlouch": "{minutes, plural, other{Ngồi {minutes} phút rồi, Upa bắt đầu gù lưng}}",
+  "@moodSlouch": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "moodSleepy": "Upa ngủ gục mất rồi… đứng dậy thôi!",
+  "moodProud": "Đạt mục tiêu hôm nay rồi! 🎉",
+  "moodPaused": "Đang họp, Upa im lặng 🤫",
+  "moodOffHours": "Ngoài giờ làm, nghỉ ngơi thôi",
+  "moodStretch": "Duỗi người nào!",
+  "nextReminderToday": "Lời nhắc tiếp theo: {time}",
+  "@nextReminderToday": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "nextReminderTomorrow": "Lời nhắc tiếp theo: {time} ngày mai",
+  "@nextReminderTomorrow": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "nextReminderDate": "Lời nhắc tiếp theo: {time} ngày {day}/{month}",
+  "@nextReminderDate": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      },
+      "day": {
+        "type": "int"
+      },
+      "month": {
+        "type": "int"
+      }
+    }
+  },
+  "pauseSheetTitle": "Tạm dừng nhắc trong…",
+  "pause30m": "30 phút",
+  "pause1h": "1 tiếng",
+  "pause2h": "2 tiếng",
+  "pauseRestOfDay": "Hết hôm nay",
+  "breaksOfGoal": "{goal, plural, other{ / {goal} lần giãn cơ}}",
+  "@breaksOfGoal": {
+    "placeholders": {
+      "goal": {
+        "type": "int"
+      }
+    }
+  },
+  "pausedUntil": "Tạm dừng tới {time}",
+  "@pausedUntil": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "stretchNow": "Giãn cơ ngay · 1 phút",
+  "inMeeting": "Đang họp",
+  "exerciseProgress": "Bài {current}/{total}",
+  "@exerciseProgress": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "getReady": "Chuẩn bị… {seconds}",
+  "@getReady": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "secondsLeft": "{seconds, plural, other{{seconds} giây}}",
+  "@secondsLeft": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "doneNothing": "Lần sau mình tập nhé!",
+  "doneGreat": "Giỏi quá! Upa duỗi người xong rồi",
+  "fishReward": "+{fish} 🐟 cá khô",
+  "@fishReward": {
+    "placeholders": {
+      "fish": {
+        "type": "int"
+      }
+    }
+  },
+  "todayProgress": "Hôm nay: {count}/{goal} lần",
+  "@todayProgress": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "goal": {
+        "type": "int"
+      }
+    }
+  },
+  "streakSuffix": "{days, plural, other{ · 🔥 {days} ngày}}",
+  "@streakSuffix": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "goalReachedNote": "🎉 Đạt mục tiêu hôm nay! Upa sẽ thôi nhắc tới ngày mai.",
+  "statStreak": "ngày liên tiếp",
+  "statFish": "cá khô",
+  "statDaysMet": "ngày đạt",
+  "last7Days": "7 ngày gần nhất",
+  "goalPerDay": "Mục tiêu: {goal} lần/ngày",
+  "@goalPerDay": {
+    "placeholders": {
+      "goal": {
+        "type": "int"
+      }
+    }
+  },
+  "historyEmpty": "Chưa có lần giãn cơ nào. Upa đang chờ nè!",
+  "libraryTitle": "Bài giãn cơ",
+  "onbWelcomeTitle": "Ngồi lâu thì Upa cũng mỏi",
+  "onbWelcomeBody": "Upa sẽ nhắc bạn đứng dậy, giãn cơ 1 phút ngay tại bàn.\nLỡ một lần cũng không sao, Upa không bao giờ trách.",
+  "workEndBeforeStart": "Giờ tan làm phải sau giờ vào làm nhé.",
+  "onbScheduleTitle": "Bạn làm việc lúc nào?",
+  "onbScheduleSubtitle": "Upa chỉ nhắc trong giờ làm, không làm phiền buổi tối.",
+  "sectionWorkHours": "Giờ làm việc",
+  "workStartEnd": "Vào làm – tan làm",
+  "sectionLunch": "Nghỉ trưa",
+  "noRemindLunch": "Không nhắc giờ nghỉ trưa",
+  "lunchTime": "Giờ nghỉ trưa",
+  "sectionWorkDays": "Ngày làm việc",
+  "onbStyleTitle": "Upa nhắc kiểu nào?",
+  "sectionFocusAreas": "Bạn hay mỏi ở đâu?",
+  "dailyGoalLine": "{goal, plural, other{Mục tiêu: {goal} lần giãn cơ mỗi ngày.}}",
+  "@dailyGoalLine": {
+    "placeholders": {
+      "goal": {
+        "type": "int"
+      }
+    }
+  },
+  "onbPermissionTitle": "Cho Upa nhắc bạn nhé?",
+  "onbPermissionBody": "Upa chỉ lắc chuông trong giờ làm, khi bạn đã ngồi lâu - không spam, không quảng cáo.\nBước tiếp theo điện thoại sẽ hỏi quyền gửi thông báo.",
+  "onbPermissionNote": "Không cho phép cũng không sao, bạn vẫn dùng app và bật lại sau trong Cài đặt.",
+  "allowReminders": "Cho phép Upa nhắc",
+  "sectionReminderStyle": "Kiểu nhắc",
+  "sectionAreas": "Vùng hay mỏi",
+  "currentGoal": "Mục tiêu hiện tại: {goal} lần/ngày",
+  "@currentGoal": {
+    "placeholders": {
+      "goal": {
+        "type": "int"
+      }
+    }
+  },
+  "sectionNotifications": "Thông báo",
+  "notifOn": "Thông báo đang bật",
+  "notifOff": "Thông báo đang tắt",
+  "notifOnSub": "Upa sẽ nhắc trong giờ làm",
+  "notifOffSub": "Upa không nhắc được cho tới khi bạn bật lại",
+  "sendTestNotification": "Gửi thông báo thử",
+  "sendTestNotificationSub": "Kiểm tra xem điện thoại có hiện lời nhắc không",
+  "sectionOnTime": "Nhắc đúng giờ",
+  "batteryIntro": "Không nhận được lời nhắc? Máy có thể đang chặn Upa chạy nền.",
+  "onBrand": "Trên {brand}:",
+  "@onBrand": {
+    "placeholders": {
+      "brand": {
+        "type": "String"
+      }
+    }
+  },
+  "disableBatteryOpt": "Tắt tối ưu pin",
+  "appSettings": "Cài đặt ứng dụng",
+  "disclaimer": "Upa Break là app tạo thói quen, không phải lời khuyên y tế. Nếu bị đau kéo dài, hãy gặp bác sĩ hoặc chuyên gia vật lý trị liệu.",
+  "sectionLanguage": "Ngôn ngữ",
+  "languageSystem": "Theo máy",
+  "languageVi": "Tiếng Việt",
+  "languageEn": "English",
+  "guideXiaomi": "Mở Cài đặt ứng dụng của Upa Break.\nTiết kiệm pin → chọn \"Không hạn chế\".\nBật \"Tự khởi động\".\nỞ màn đa nhiệm, nhấn giữ Upa Break → chọn biểu tượng ổ khóa để không bị dọn.",
+  "guideOppo": "Mở Cài đặt ứng dụng của Upa Break.\nMức sử dụng pin → bật \"Cho phép hoạt động nền\" và \"Cho phép tự khởi chạy\".\nỞ màn đa nhiệm, nhấn giữ Upa Break → \"Khóa\" để không bị dọn.",
+  "guideVivo": "Cài đặt → Pin → Mức tiêu thụ điện năng nền cao → bật cho Upa Break.\ni Manager → Quản lý ứng dụng → Tự khởi động → bật Upa Break.\nỞ màn đa nhiệm, kéo Upa Break xuống để khóa.",
+  "guideSamsung": "Mở Cài đặt ứng dụng của Upa Break → Pin → chọn \"Không hạn chế\".\nCài đặt → Chăm sóc thiết bị → Pin → Giới hạn sử dụng nền: đảm bảo Upa Break không nằm trong \"Ứng dụng ngủ\" hoặc \"Ứng dụng ngủ sâu\".",
+  "guideOther": "Bấm \"Tắt tối ưu pin\" bên dưới → tìm Upa Break → chọn \"Không tối ưu hóa\".\nNếu máy có mục \"Tự khởi động\" hoặc \"Chạy nền\", hãy bật cho Upa Break.",
+  "bannerTitle": "Upa chưa được phép nhắc bạn",
+  "bannerBody": "Bật thông báo để Upa nhắc bạn đứng dậy đúng giờ. Không bật cũng không sao, bạn vẫn tự giãn cơ được.",
+  "enableNotifications": "Bật thông báo",
+  "debugTitle": "Debug thông báo",
+  "debugStatus": "Trạng thái",
+  "debugError": "Lỗi: {error}",
+  "@debugError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "debugPermission": "Quyền thông báo",
+  "permAllowed": "Đã cho phép",
+  "permDenied": "Bị từ chối / đang tắt",
+  "permUnknown": "Không xác định",
+  "debugNow": "Bây giờ",
+  "debugTestIn1Min": "Nhắc thử sau 1 phút",
+  "debugReschedule": "Lên lịch lại",
+  "debugPlanned": "Mốc nhắc theo kế hoạch ({count})",
+  "@debugPlanned": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "debugPlannedEmpty": "Không có mốc nào (đã đạt mục tiêu / ngoài giờ làm?)",
+  "debugPending": "Đang chờ trong hệ thống ({count})",
+  "@debugPending": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "debugPendingEmpty": "Không có thông báo nào đang chờ",
+  "debugScheduledAt": "Đã hẹn lúc {time}. Có thể tắt app để thử (Android có thể lệch vài phút).",
+  "@debugScheduledAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "notifChannelName": "Nhắc giãn cơ",
+  "notifChannelDesc": "Lời nhắc đứng dậy, giãn cơ trong giờ làm việc",
+  "notifActionStart": "Bắt đầu",
+  "notifActionSnooze": "Để sau {minutes}'",
+  "@notifActionSnooze": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "notif1Title": "Upa gù lưng rồi",
+  "notif1Body": "Đứng dậy duỗi người 1 phút cùng mình nhé.",
+  "notif2Title": "Cổ mỏi chưa?",
+  "notif2Body": "Nghiêng cổ vài nhịp là đỡ ngay.",
+  "notif3Title": "Ngồi lâu rồi đó",
+  "notif3Body": "Upa bắt đầu ngáp… mình giãn cơ chút nha.",
+  "notif4Title": "Giờ nghỉ 60 giây!",
+  "notif4Body": "Xoay vai, hít sâu, rồi làm tiếp.",
+  "notif5Title": "Mắt cần nghỉ 👀",
+  "notif5Body": "Nhìn ra xa 20 giây, Upa đếm cho.",
+  "notif6Title": "Upa đợi bạn nè",
+  "notif6Body": "Một bài nhỏ thôi, ngồi tại chỗ cũng làm được.",
+  "notifTestTitle": "Upa chào bạn 👋",
+  "notifTestBody": "Thông báo hoạt động tốt. Chạm để thử một bài giãn cơ.",
+  "notifTestScheduledTitle": "Upa nhắc thử ⏰",
+  "notifTestScheduledBody": "Lời nhắc hẹn giờ hoạt động tốt. Chạm để giãn cơ.",
+  "notifSnoozeTitle": "Upa nhắc lại nè ⏰",
+  "notifSnoozeBody": "Đã {minutes} phút rồi, đứng dậy duỗi người 1 phút nhé.",
+  "@notifSnoozeBody": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "exNeckTiltName": "Nghiêng cổ",
+  "exNeckTiltSteps": "Ngồi thẳng, thả lỏng hai vai.\nNghiêng tai phải về phía vai phải, giữ 10 giây.\nVề giữa, nghiêng sang trái, giữ 10 giây.\nThở đều, làm chậm, không gây đau.",
+  "exChinTuckName": "Thu cằm",
+  "exChinTuckSteps": "Ngồi thẳng, mắt nhìn về phía trước.\nKéo cằm lùi ra sau như đang tạo cằm đôi.\nGiữ 5 giây rồi thả lỏng.\nLặp lại khoảng 5 lần.",
+  "exNeckTurnName": "Quay cổ trái phải",
+  "exNeckTurnSteps": "Từ từ quay đầu sang phải, giữ 5 giây.\nQuay về giữa.\nQuay sang trái, giữ 5 giây.\nChỉ quay trái phải, không xoay tròn cả vòng.",
+  "exShoulderRollName": "Xoay vai",
+  "exShoulderRollSteps": "Nhún hai vai lên gần tai.\nĐưa vai ra sau rồi hạ xuống.\nXoay 5 vòng ra sau.\nĐổi chiều, xoay 5 vòng ra trước.",
+  "exShoulderShrugName": "Nhún vai thả lỏng",
+  "exShoulderShrugSteps": "Hít vào, nhún hai vai lên cao.\nGiữ 3 giây.\nThở ra, thả vai rơi xuống thật thả lỏng.\nLặp lại khoảng 6 lần.",
+  "exChestOpenName": "Mở ngực",
+  "exChestOpenSteps": "Đan hai bàn tay ra sau lưng.\nKéo hai bả vai lại gần nhau.\nƯỡn nhẹ ngực, mắt nhìn hơi lên.\nGiữ và thở đều.",
+  "exOverheadReachName": "Vươn người lên cao",
+  "exOverheadReachSteps": "Đan hai tay, lật lòng bàn tay lên trên.\nVươn thẳng tay qua đầu.\nKéo dài cột sống, giữ 10 giây.\nThả lỏng rồi lặp lại.",
+  "exSideBendName": "Nghiêng người",
+  "exSideBendSteps": "Giơ tay phải lên cao.\nNghiêng người sang trái, giữ 10 giây.\nĐổi tay, nghiêng sang phải, giữ 10 giây.\nGiữ mông luôn chạm ghế.",
+  "exSeatedTwistName": "Vặn mình trên ghế",
+  "exSeatedTwistSteps": "Ngồi thẳng, hai bàn chân đặt trên sàn.\nXoay thân sang phải, tay trái đặt lên gối phải.\nGiữ 10 giây, thở đều.\nĐổi bên.",
+  "exCatCowName": "Cong lưng kiểu mèo",
+  "exCatCowSteps": "Ngồi mép ghế, hai tay đặt lên đùi.\nHít vào: ưỡn ngực, nhìn lên.\nThở ra: cong tròn lưng, cúi đầu.\nLặp lại thật chậm, như một chú mèo.",
+  "exWristFlexName": "Giãn cổ tay (ngửa)",
+  "exWristFlexSteps": "Duỗi tay phải ra trước, lòng bàn tay ngửa.\nTay trái kéo nhẹ các ngón tay xuống.\nGiữ 10 giây rồi đổi tay.\nKéo nhẹ nhàng, không kéo mạnh.",
+  "exWristExtName": "Giãn cổ tay (úp)",
+  "exWristExtSteps": "Duỗi tay ra trước, lòng bàn tay úp.\nTay kia ấn nhẹ mu bàn tay xuống.\nGiữ 10 giây rồi đổi tay.\nThả lỏng các ngón tay.",
+  "exFistSpreadName": "Nắm – xòe tay",
+  "exFistSpreadSteps": "Nắm chặt hai bàn tay.\nXòe rộng hết cỡ các ngón.\nLặp lại khoảng 10 lần.\nXoay cổ tay vài vòng mỗi chiều.",
+  "exEye2020Name": "Nhìn xa 20 giây",
+  "exEye2020Steps": "Rời mắt khỏi màn hình.\nNhìn một vật ở xa khoảng 6 mét.\nChớp mắt chậm vài lần.\nThả lỏng cơ mặt.",
+  "exEyePalmingName": "Úp tay nghỉ mắt",
+  "exEyePalmingSteps": "Xoa hai lòng bàn tay cho ấm.\nÚp nhẹ lên mắt, không ấn vào mắt.\nHít thở chậm trong bóng tối.\nBỏ tay ra, mở mắt từ từ.",
+  "exCalfRaiseName": "Kiễng gót",
+  "exCalfRaiseSteps": "Đứng dậy, vịn nhẹ vào bàn.\nKiễng gót lên cao, giữ 2 giây.\nHạ gót xuống từ từ.\nLặp lại khoảng 12 lần.",
+  "exAnkleCircleName": "Xoay cổ chân",
+  "exAnkleCircleSteps": "Duỗi chân phải, nhấc nhẹ khỏi sàn.\nXoay cổ chân 5 vòng mỗi chiều.\nĐổi sang chân trái.\nNgồi thẳng lưng khi làm.",
+  "exFigureFourName": "Giãn hông số 4",
+  "exFigureFourSteps": "Gác mắt cá chân phải lên gối trái.\nLưng thẳng, nghiêng nhẹ người về trước.\nGiữ khoảng 15 giây.\nĐổi chân."
+}

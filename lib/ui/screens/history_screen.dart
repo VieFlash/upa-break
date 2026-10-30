@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../data/exercises.dart';
+import '../../l10n/l10n.dart';
 import '../../models/settings.dart';
 import '../../state/app_state.dart';
 import '../theme.dart';
@@ -8,11 +8,10 @@ import '../theme.dart';
 class HistoryScreen extends StatelessWidget {
   const HistoryScreen({super.key});
 
-  static const _wd = {1: 'T2', 2: 'T3', 3: 'T4', 4: 'T5', 5: 'T6', 6: 'T7', 7: 'CN'};
-
   @override
   Widget build(BuildContext context) {
     final s = AppScope.of(context);
+    final l = context.l10n;
     final t = Theme.of(context).textTheme;
     final days = s.last7Days;
     final goal = s.dailyGoal;
@@ -20,17 +19,17 @@ class HistoryScreen extends StatelessWidget {
     final metDays = days.where((e) => e.$2 >= goal).length;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Nhật ký'), backgroundColor: Colors.transparent),
+      appBar: AppBar(title: Text(l.tabHistory), backgroundColor: Colors.transparent),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
         children: [
           Row(
             children: [
-              Expanded(child: _Stat(value: '🔥 ${s.streak}', label: 'ngày liên tiếp')),
+              Expanded(child: _Stat(value: '🔥 ${s.streak}', label: l.statStreak)),
               const SizedBox(width: 12),
-              Expanded(child: _Stat(value: '🐟 ${s.fish}', label: 'cá khô')),
+              Expanded(child: _Stat(value: '🐟 ${s.fish}', label: l.statFish)),
               const SizedBox(width: 12),
-              Expanded(child: _Stat(value: '$metDays/7', label: 'ngày đạt')),
+              Expanded(child: _Stat(value: '$metDays/7', label: l.statDaysMet)),
             ],
           ),
           const SizedBox(height: 16),
@@ -40,7 +39,7 @@ class HistoryScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('7 ngày gần nhất', style: t.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
+                  Text(l.last7Days, style: t.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
                   const SizedBox(height: 16),
                   SizedBox(
                     height: 160,
@@ -66,7 +65,7 @@ class HistoryScreen extends StatelessWidget {
                                   ),
                                 ),
                                 const SizedBox(height: 6),
-                                Text(_wd[day.weekday]!, style: t.labelMedium),
+                                Text(l.weekdayShort(day.weekday), style: t.labelMedium),
                               ],
                             ),
                           ),
@@ -74,16 +73,16 @@ class HistoryScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  Text('Mục tiêu: $goal lần/ngày', style: t.bodySmall),
+                  Text(l.goalPerDay(goal), style: t.bodySmall),
                 ],
               ),
             ),
           ),
           const SizedBox(height: 16),
-          Text('Hôm nay', style: t.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
+          Text(l.tabToday, style: t.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
           const SizedBox(height: 8),
           if (s.todayLogs.isEmpty)
-            const Card(child: ListTile(title: Text('Chưa có lần giãn cơ nào. Upa đang chờ nè!')))
+            Card(child: ListTile(title: Text(l.historyEmpty)))
           else
             for (final log in s.todayLogs)
               Padding(
@@ -91,7 +90,7 @@ class HistoryScreen extends StatelessWidget {
                 child: Card(
                   child: ListTile(
                     leading: const Text('🐾', style: TextStyle(fontSize: 22)),
-                    title: Text(log.exerciseIds.map((id) => exerciseById(id).name).join(' · ')),
+                    title: Text(log.exerciseIds.map(l.exerciseName).join(' · ')),
                     trailing: Text(formatMinutes(log.at.hour * 60 + log.at.minute)),
                   ),
                 ),

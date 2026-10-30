@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/l10n.dart';
 import '../../services/system_settings.dart';
 import '../../state/app_state.dart';
 
@@ -17,6 +18,7 @@ class PermissionBanner extends StatelessWidget {
     final state = AppScope.of(context);
     if (!state.notificationsBlocked) return const SizedBox.shrink();
     final t = Theme.of(context).textTheme;
+    final l = context.l10n;
     return Card(
       color: const Color(0xFFFFF1D6),
       child: Padding(
@@ -29,20 +31,19 @@ class PermissionBanner extends StatelessWidget {
                 const Icon(Icons.notifications_off_outlined, color: Color(0xFFB7791F)),
                 const SizedBox(width: 10),
                 Expanded(
-                  child: Text('Upa chưa được phép nhắc bạn',
+                  child: Text(l.bannerTitle,
                       style: t.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
                 ),
               ],
             ),
             const SizedBox(height: 6),
-            const Text('Bật thông báo để Upa nhắc bạn đứng dậy đúng giờ. '
-                'Không bật cũng không sao, bạn vẫn tự giãn cơ được.'),
+            Text(l.bannerBody),
             Align(
               alignment: Alignment.centerRight,
               child: TextButton.icon(
                 onPressed: () => enable(state),
                 icon: const Icon(Icons.settings_outlined),
-                label: const Text('Bật thông báo'),
+                label: Text(l.enableNotifications),
               ),
             ),
           ],

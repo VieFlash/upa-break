@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:upa_break/data/storage.dart';
+import 'package:upa_break/l10n/l10n.dart';
 import 'package:upa_break/services/notification_service.dart';
 import 'package:upa_break/state/app_state.dart';
 import 'package:upa_break/ui/screens/debug_screen.dart';
@@ -12,7 +13,15 @@ void main() {
     SharedPreferences.setMockInitialValues({});
     final state = AppState(await Storage.open(), NotificationService(onTapBreak: () {}));
     // giống app.dart: AppScope bọc MaterialApp để route mới (DebugScreen) cũng đọc được state
-    await tester.pumpWidget(AppScope(state: state, child: const MaterialApp(home: SettingsScreen())));
+    await tester.pumpWidget(AppScope(
+      state: state,
+      child: const MaterialApp(
+        locale: Locale('vi'),
+        supportedLocales: AppLocalizations.supportedLocales,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        home: SettingsScreen(),
+      ),
+    ));
   }
 
   testWidgets('nhấn giữ tiêu đề "Cài đặt" 3 giây thì mở màn debug', (tester) async {
