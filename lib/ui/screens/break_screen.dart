@@ -9,6 +9,7 @@ import '../../models/exercise.dart';
 import '../../models/settings.dart';
 import '../../state/app_state.dart';
 import '../theme.dart';
+import '../widgets/exercise_frames.dart';
 import '../widgets/mascot.dart';
 
 /// Mở phiên giãn cơ nhanh (2 bài) theo vùng hay mỏi.
@@ -165,7 +166,7 @@ class _BreakScreenState extends State<BreakScreen> {
                   backgroundColor: AppColors.fur.withValues(alpha: 0.15),
                 ),
               ),
-              Mascot(mood: ready ? Mood.fresh : Mood.stretch, size: 200),
+              ExerciseFrames(exercise: _ex, size: 210),
             ],
           ),
           const SizedBox(height: 16),

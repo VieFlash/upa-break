@@ -84,9 +84,13 @@ thêm tham số chọn phụ kiện thay vì hard-code; xuất thêm biến th�
 sao chép lớp `Svg`, `star`, `bub`, `shadow`, bảng hiệu ứng; giữ nguyên quy tắc mục 2–3; đổi hình đầu/tai/đuôi
 và bảng màu. Xuất `assets/buddies/<tên>_<trạng thái>.svg` với cùng 5 trạng thái.
 
-**Hình minh họa bài tập** (task T2.2): `tool/gen_exercises.py`, mỗi bài 2–3 khung
+**Hình minh họa bài tập** (task T2.2): `tool/gen_exercises.py` (import hàm vẽ từ `gen_mascot.py`), mỗi bài 2–3 khung
 `assets/exercises/<exercise_id>_<n>.svg`, cùng viewBox/viền/bóng. Động tác phải đọc được rõ ràng
-hơn là dễ thương (ưu tiên đúng tư thế); có thể dùng Upa nhỏ ở góc.
+hơn là dễ thương (ưu tiên đúng tư thế); Upa nhỏ ở góc đổi biểu cảm giữa các khung.
+Người tập tạo dáng bằng khớp (`seated_front`, `seated_side`, `standing_side`, close-up tay), mũi tên `arrow`/`arc_arrow`.
+**Trái/phải theo người tập**: nhìn chính diện thì bên phải người tập nằm bên TRÁI khung hình.
+Xem trước: `python3 tool/render_mascot.py --exercises` → `build/exercises_preview.png`. Số khung mỗi bài phải khớp
+`frames:` trong `lib/data/exercises.dart` (test kiểm tra file tồn tại).
 
 **Cảnh nền / vật dụng** (bàn làm việc, cây, đèn — task T3.1): `tool/gen_scenes.py`, khung 512×288
 cho cảnh, 128×128 cho vật dụng; vật dụng dùng chung `shaded()` và màu theo mục 4.

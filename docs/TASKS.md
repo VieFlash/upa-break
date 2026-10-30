@@ -87,7 +87,7 @@ tool/setup_android.dart
 - Mặc định theo ngôn ngữ máy, cho phép đổi trong Cài đặt.
 - **Xong khi:** không còn chuỗi hiển thị hard-code (grep tiếng Việt có dấu trong `lib/ui` ra rỗng).
 
-### [ ] T2.2 Hình minh họa riêng cho từng bài tập
+### [x] T2.2 Hình minh họa riêng cho từng bài tập
 - Mỗi bài có 2–3 khung SVG (vd: `assets/exercises/neck_tilt_1.svg`, `_2.svg`), phát luân phiên mỗi 1–1.5 giây.
 - Hướng: người cách điệu đơn giản thể hiện đúng động tác + Upa nhỏ làm theo ở góc.
 - Thêm trường `frames` vào `Exercise`; fallback về `mascot_stretch.svg` nếu thiếu.

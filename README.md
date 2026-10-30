@@ -62,9 +62,10 @@ lib/
   ui/widgets/                   Mascot + UpaRig (chuyển động theo trạng thái), form giờ làm
 assets/mascot/                  SVG Upa: mascot_{fresh,slouch,sleepy,stretch,proud,bell}, app_icon
 assets/mascot/rig/              Các lớp SVG cho chuyển động (sinh từ tool/gen_mascot.py)
+assets/exercises/               Hình minh họa bài tập <id>_<n>.svg, 2-3 khung/bài (sinh từ tool/gen_exercises.py)
 assets/icon/                    Nguồn icon app + splash (SVG từ gen_mascot.py → PNG 1024 bằng render_mascot.py --icons)
 assets/upa_assets/              Bản gốc SVG/PNG đời đầu (không còn dùng trong build)
-tool/                           setup_android/ios, gen_mascot, render_mascot
+tool/                           setup_android/ios, gen_mascot, gen_exercises, render_mascot
 ```
 
 ## Cách hoạt động
@@ -82,7 +83,6 @@ tool/                           setup_android/ios, gen_mascot, render_mascot
 
 ## Việc tiếp theo
 
-- [ ] Ảnh minh họa riêng cho từng bài tập (hiện dùng chung Upa giãn cơ)
 - [ ] Góc làm việc của Upa lên cấp, huy chương
 - [ ] Premium (RevenueCat), widget màn hình chính
 

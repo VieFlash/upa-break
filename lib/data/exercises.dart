@@ -5,29 +5,29 @@ import '../models/settings.dart';
 /// Nên nhờ chuyên gia vật lý trị liệu duyệt lại nội dung trước khi phát hành.
 const List<Exercise> kExercises = [
   // Cổ
-  Exercise(id: 'neck_tilt', area: BodyArea.neck, seconds: 40),
-  Exercise(id: 'chin_tuck', area: BodyArea.neck, seconds: 30),
-  Exercise(id: 'neck_turn', area: BodyArea.neck, seconds: 30),
+  Exercise(id: 'neck_tilt', area: BodyArea.neck, seconds: 40, frames: 3),
+  Exercise(id: 'chin_tuck', area: BodyArea.neck, seconds: 30, frames: 2),
+  Exercise(id: 'neck_turn', area: BodyArea.neck, seconds: 30, frames: 3),
   // Vai
-  Exercise(id: 'shoulder_roll', area: BodyArea.shoulders, seconds: 30),
-  Exercise(id: 'shoulder_shrug', area: BodyArea.shoulders, seconds: 30),
-  Exercise(id: 'chest_open', area: BodyArea.shoulders, seconds: 40),
+  Exercise(id: 'shoulder_roll', area: BodyArea.shoulders, seconds: 30, frames: 2),
+  Exercise(id: 'shoulder_shrug', area: BodyArea.shoulders, seconds: 30, frames: 2),
+  Exercise(id: 'chest_open', area: BodyArea.shoulders, seconds: 40, frames: 2),
   // Lưng
-  Exercise(id: 'overhead_reach', area: BodyArea.back, seconds: 40),
-  Exercise(id: 'side_bend', area: BodyArea.back, seconds: 40),
-  Exercise(id: 'seated_twist', area: BodyArea.back, seconds: 40),
-  Exercise(id: 'cat_cow', area: BodyArea.back, seconds: 40),
+  Exercise(id: 'overhead_reach', area: BodyArea.back, seconds: 40, frames: 2),
+  Exercise(id: 'side_bend', area: BodyArea.back, seconds: 40, frames: 2),
+  Exercise(id: 'seated_twist', area: BodyArea.back, seconds: 40, frames: 2),
+  Exercise(id: 'cat_cow', area: BodyArea.back, seconds: 40, frames: 2),
   // Cổ tay
-  Exercise(id: 'wrist_flex', area: BodyArea.wrists, seconds: 30),
-  Exercise(id: 'wrist_ext', area: BodyArea.wrists, seconds: 30),
-  Exercise(id: 'fist_spread', area: BodyArea.wrists, seconds: 30),
+  Exercise(id: 'wrist_flex', area: BodyArea.wrists, seconds: 30, frames: 2),
+  Exercise(id: 'wrist_ext', area: BodyArea.wrists, seconds: 30, frames: 2),
+  Exercise(id: 'fist_spread', area: BodyArea.wrists, seconds: 30, frames: 2),
   // Mắt
-  Exercise(id: 'eye_2020', area: BodyArea.eyes, seconds: 25),
-  Exercise(id: 'eye_palming', area: BodyArea.eyes, seconds: 30),
+  Exercise(id: 'eye_2020', area: BodyArea.eyes, seconds: 25, frames: 2),
+  Exercise(id: 'eye_palming', area: BodyArea.eyes, seconds: 30, frames: 2),
   // Chân
-  Exercise(id: 'calf_raise', area: BodyArea.legs, seconds: 40),
-  Exercise(id: 'ankle_circle', area: BodyArea.legs, seconds: 30),
-  Exercise(id: 'figure_four', area: BodyArea.legs, seconds: 40),
+  Exercise(id: 'calf_raise', area: BodyArea.legs, seconds: 40, frames: 2),
+  Exercise(id: 'ankle_circle', area: BodyArea.legs, seconds: 30, frames: 2),
+  Exercise(id: 'figure_four', area: BodyArea.legs, seconds: 40, frames: 2),
 ];
 
 Exercise exerciseById(String id) => kExercises.firstWhere((e) => e.id == id);

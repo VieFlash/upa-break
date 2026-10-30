@@ -3,6 +3,7 @@
   python3 tool/render_mascot.py                 # preview sheet -> build/mascot_preview.png
   python3 tool/render_mascot.py --zoom mascot_fresh   # one file at 640px -> build/zoom_<name>.png
   python3 tool/render_mascot.py --export        # PNG @1x/@2x/@3x + icon 1024 -> build/png/
+  python3 tool/render_mascot.py --exercises     # assets/exercises/*.svg -> build/exercises_preview.png (mỗi bài 1 hàng)
   python3 tool/render_mascot.py --icons         # assets/icon/*.svg -> 1024 PNG (+ monochrome) cho launcher icon/splash
 
 Requires: pip install cairosvg pillow
@@ -60,6 +61,27 @@ def export():
     print(d)
 
 
+def exercises(size=200):
+    """Lưới xem trước hình bài tập: mỗi bài một hàng, các khung theo thứ tự."""
+    files = sorted(glob.glob("assets/exercises/*.svg"))
+    rows = {}
+    for f in files:
+        name = os.path.splitext(os.path.basename(f))[0]
+        ex, n = name.rsplit("_", 1)
+        rows.setdefault(ex, []).append((int(n), f))
+    cols = max(len(v) for v in rows.values())
+    sheet = Image.new("RGBA", (180 + size * cols, size * len(rows)), (255, 255, 255, 255))
+    draw = ImageDraw.Draw(sheet)
+    for r, (ex, frames) in enumerate(rows.items()):
+        draw.text((8, r * size + size // 2), ex, fill=(90, 34, 51))
+        for c, (_, f) in enumerate(sorted(frames)):
+            sheet.alpha_composite(render(f, size), (180 + c * size, r * size))
+            draw.rectangle([180 + c * size, r * size, 180 + c * size + size - 1, r * size + size - 1], outline=(230, 230, 230))
+    out = os.path.join(BUILD, "exercises_preview.png")
+    sheet.save(out)
+    print(out)
+
+
 def icons():
     """PNG nguồn cho flutter_launcher_icons / flutter_native_splash (cấu hình trong pubspec.yaml)."""
     d = "assets/icon"
@@ -86,6 +108,7 @@ if __name__ == "__main__":
     ap.add_argument("--zoom")
     ap.add_argument("--export", action="store_true")
     ap.add_argument("--icons", action="store_true")
+    ap.add_argument("--exercises", action="store_true")
     a = ap.parse_args()
     if a.zoom:
         zoom(a.zoom)
@@ -93,5 +116,7 @@ if __name__ == "__main__":
         export()
     elif a.icons:
         icons()
+    elif a.exercises:
+        exercises()
     else:
         preview()

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../data/exercises.dart';
 import '../../l10n/l10n.dart';
@@ -27,6 +28,7 @@ class LibraryScreen extends StatelessWidget {
                 padding: const EdgeInsets.only(bottom: 8),
                 child: Card(
                   child: ListTile(
+                    leading: SvgPicture.asset(ex.frameAssets.first, width: 52, height: 52),
                     title: Text(l.exerciseName(ex.id), style: const TextStyle(fontWeight: FontWeight.w600)),
                     subtitle: Text(l.exerciseSteps(ex.id).first, maxLines: 1, overflow: TextOverflow.ellipsis),
                     trailing: Text('${ex.seconds}s'),
